@@ -1,0 +1,24 @@
+fragment CardThemeCore on CardTheme {
+  id
+  name
+  displayName
+  description
+  isDefault
+  isPremium
+  frontPreviewUrl
+}
+
+fragment CardThemeFull on CardTheme {
+  ...CardThemeCore
+  author
+  version
+  frontHtml
+  backHtml
+  styleSchema
+  defaultDisplaySettings
+  isActive
+  frontPreviewUrl
+  backPreviewUrl
+  createdAt
+  updatedAt
+}

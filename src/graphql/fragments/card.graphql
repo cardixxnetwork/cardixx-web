@@ -1,0 +1,89 @@
+fragment CardCore on Card {
+  id
+  userId
+  firstName
+  lastName
+  jobTitle
+  profilePhoto
+}
+
+fragment CardCompanyDetails on Card {
+  companyName
+  companyEmail
+  companyPhone
+  companyWebsite
+  companyAddress
+  companyLogo
+  about
+  industry
+  specialties
+  location
+  companySize
+}
+
+fragment CardFull on Card {
+  ...CardCore
+  ...CardCompanyDetails
+  templateId
+  themeId
+  name
+  isPrivate
+  # Personal Info (extended)
+  middleName
+  prefix
+  suffix
+  preferredName
+  pronouns
+  maidenName
+  bio
+  # Professional
+  department
+  headline
+  # Contact
+  personalWebsite
+  # Communication
+  discord
+  wechat
+  line
+  signal
+  # Social Links
+  linkedin
+  instagram
+  x
+  facebook
+  tiktok
+  youtube
+  github
+  dribbble
+  behance
+  snapchat
+  pinterest
+  whatsapp
+  telegram
+  threads
+  patreon
+  spotify
+  soundcloud
+  appleMusic
+  # Conferencing & Booking
+  teams
+  meet
+  zoom
+  webex
+  calendly
+  bookings
+  # Media
+  videoLink
+  fileUpload
+  # Settings
+  displaySettings
+  customStyles
+  # Pre-rendered images
+  frontImageUrl
+  backImageUrl
+  createdAt
+  updatedAt
+  theme {
+    ...CardThemeFull
+  }
+}

@@ -1,0 +1,5 @@
+query PublicCard($id: String!, $source: String) {
+  publicCard(id: $id, source: $source) {
+    ...CardFull
+  }
+}
