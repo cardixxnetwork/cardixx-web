@@ -16,20 +16,8 @@ export default async function HomePage({
   return (
     <main className="flex-1">
       <section className="relative overflow-hidden">
-        {/* ── Background: looping video with fallback ── */}
-        <div className="absolute inset-0 bg-white" />
-        <div className="absolute inset-0 bg-[url('/hero-video-poster.jpg')] bg-cover bg-center opacity-20" />
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="none"
-          className="absolute inset-0 h-full w-full object-cover opacity-20"
-          aria-hidden="true"
-        >
-          <source src="/0_Green_Blur_1920x1080.mp4" type="video/mp4" />
-        </video>
+        {/* ── Animated mesh background ── */}
+        <div className="mesh-background absolute inset-0" />
 
         {/* ── Hero text content ── */}
         <div className="relative z-10 flex flex-col items-center px-5 pt-10 pb-12 text-center md:px-8 md:pt-14 lg:pt-16">
@@ -48,7 +36,7 @@ export default async function HomePage({
             className="mx-auto mt-6 max-w-[800px] bg-clip-text text-3xl font-semibold leading-tight tracking-tight text-transparent sm:text-4xl md:text-5xl lg:text-[60px] lg:leading-[72px]"
             style={{
               backgroundImage:
-                "linear-gradient(150deg, #6ECE6E 0%, #40C484 25%, #1CB57E 55%, #049A79 100%)",
+                "linear-gradient(150deg, #049A79 0%, #1CB57E 40%, #40C484 70%, #B3D16D 100%)",
             }}
           >
             {t("title")}
