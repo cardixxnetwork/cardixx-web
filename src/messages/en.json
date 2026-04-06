@@ -23,7 +23,51 @@
   "landing": {
     "title": "The Operating System for Professional Networking",
     "subtitle": "Networking Made Simple, Intentional, and Measurable.",
-    "cta": "Start Networking"
+    "cta": "Start Networking",
+    "promoPill": "The wait is over.",
+    "promoAction": "Try It Free",
+    "appStore": "Download on the App Store",
+    "googlePlay": "Get it on Google Play"
+  },
+  "hero": {
+    "next": "Next",
+    "tryYourself": "Try Yourself",
+    "join": {
+      "title": "Join Cardixx",
+      "shortTitle": "Join Cardixx",
+      "description": "and step into a new era of professional networking.",
+      "shortDescription": "and step into a new era of professional networking."
+    },
+    "create": {
+      "title": "Create Your Card",
+      "shortTitle": "Create",
+      "description": "Set up your digital business card with your profession, skills, and get ready for networking.",
+      "shortDescription": "your business card and get ready for networking."
+    },
+    "checkIn": {
+      "title": "Check In to a Location",
+      "shortTitle": "Check-in",
+      "description": "Arrive at a coworking space, café, or event, check in through the app, and let others know you're open to connect.",
+      "shortDescription": "at the venue and choose your networking preferences."
+    },
+    "discover": {
+      "title": "Discover & Find Your Match",
+      "shortTitle": "Discover",
+      "description": "See who else is checked in and filter the room by profession, interests, or goals to discover your ideal connections.",
+      "shortDescription": "professionals nearby relevant to your networking intent."
+    },
+    "connect": {
+      "title": "Connect & Exchange",
+      "shortTitle": "Connect",
+      "description": "Reach out to relevant professionals via in-app messaging and easily swap your digital cards with a single tap.",
+      "shortDescription": "with them via in-app messaging. Exchange your card."
+    },
+    "measure": {
+      "title": "Measure Your Success",
+      "shortTitle": "Measure",
+      "description": "Monitor your networking performance, review your connection history, and optimize your profile for even better results.",
+      "shortDescription": "your networking performance and improve continuously."
+    }
   },
   "common": {
     "home": "Home",
@@ -31,6 +75,16 @@
     "contact": "Contact",
     "faq": "FAQ",
     "pricing": "Pricing"
+  },
+  "header": {
+    "networkingHubs": "Networking Hubs",
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "startNetworking": "Start Networking",
+    "downloadNow": "Download Now",
+    "menu": "Menu",
+    "closeMenu": "Close menu"
   },
   "error": {
     "title": "Something went wrong",

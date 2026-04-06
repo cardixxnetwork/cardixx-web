@@ -1,43 +1,97 @@
 {
   "card": {
-    "about": "About",
-    "company": "Company",
-    "documents": "Documents",
-    "saveToWallet": "Save to Cardixx Wallet",
-    "sendContactRequest": "Send Contact Request",
-    "skills": "Skills",
-    "phone": "Phone",
-    "email": "E-Mail",
-    "website": "Website",
-    "location": "Location",
-    "industry": "Industry",
-    "specialties": "Specialties",
-    "noDocuments": "No documents available.",
-    "flipHint": "Click or swipe to flip",
-    "downloadOnAppStore": "Download on the App Store",
-    "getItOnGooglePlay": "Get it on Google Play",
-    "getTheApp": "Get the Cardixx App",
-    "notFound": "Card not found",
-    "notFoundDescription": "This card doesn't exist or is private."
+    "about": "Hakkında",
+    "company": "Şirket",
+    "documents": "Belgeler",
+    "saveToWallet": "Cardixx Cüzdanına Kaydet",
+    "sendContactRequest": "İletişim İsteği Gönder",
+    "skills": "Yetenekler",
+    "phone": "Telefon",
+    "email": "E-Posta",
+    "website": "Web Sitesi",
+    "location": "Konum",
+    "industry": "Sektör",
+    "specialties": "Uzmanlıklar",
+    "noDocuments": "Mevcut belge yok.",
+    "flipHint": "Çevirmek için tıkla veya kaydır",
+    "downloadOnAppStore": "App Store'dan İndir",
+    "getItOnGooglePlay": "Google Play'den Edinin",
+    "getTheApp": "Cardixx Uygulamasını İndir",
+    "notFound": "Kart bulunamadı",
+    "notFoundDescription": "Bu kart mevcut değil veya gizli."
   },
   "landing": {
-    "title": "The Operating System for Professional Networking",
-    "subtitle": "Networking Made Simple, Intentional, and Measurable.",
-    "cta": "Start Networking"
+    "title": "Profesyonel Networking İçin İşletim Sistemi",
+    "subtitle": "Networking: Basit, Bilinçli ve Ölçülebilir.",
+    "cta": "Ağ Kurmaya Başla",
+    "promoPill": "Bekleme sona erdi.",
+    "promoAction": "Ücretsiz Dene",
+    "appStore": "App Store'dan İndir",
+    "googlePlay": "Google Play'den Edinin"
+  },
+  "hero": {
+    "next": "İleri",
+    "tryYourself": "Kendin Dene",
+    "join": {
+      "title": "Cardixx'e Katıl",
+      "shortTitle": "Cardixx'e Katıl",
+      "description": "ve profesyonel networking'in yeni çağına adım at.",
+      "shortDescription": "ve profesyonel networking'in yeni çağına adım at."
+    },
+    "create": {
+      "title": "Kartını Oluştur",
+      "shortTitle": "Oluştur",
+      "description": "Meslek, yetenek bilgilerinle dijital kartvizitini oluştur ve networking'e hazır ol.",
+      "shortDescription": "kartvizitini oluştur ve networking'e hazır ol."
+    },
+    "checkIn": {
+      "title": "Bir Konuma Giriş Yap",
+      "shortTitle": "Giriş Yap",
+      "description": "Bir ortak çalışma alanına, kafeye veya etkinliğe var, uygulama üzerinden giriş yap ve bağlantı kurmaya açık olduğunu göster.",
+      "shortDescription": "mekana var ve networking tercihlerini belirle."
+    },
+    "discover": {
+      "title": "Keşfet & Eşleşmeni Bul",
+      "shortTitle": "Keşfet",
+      "description": "Kimlerin giriş yaptığını gör, meslek, ilgi alanı veya hedeflere göre filtrele ve ideal bağlantılarını keşfet.",
+      "shortDescription": "yakınındaki profesyonelleri networking amacına göre bul."
+    },
+    "connect": {
+      "title": "Bağlan & Paylaş",
+      "shortTitle": "Bağlan",
+      "description": "İlgili profesyonellere uygulama içi mesajlaşma ile ulaş ve dijital kartlarını tek bir dokunuşla paylaş.",
+      "shortDescription": "uygulama içi mesajlaşma ile iletişime geç. Kartını paylaş."
+    },
+    "measure": {
+      "title": "Başarını Ölç",
+      "shortTitle": "Ölç",
+      "description": "Networking performansını izle, bağlantı geçmişini incele ve daha iyi sonuçlar için profilini optimize et.",
+      "shortDescription": "networking performansını izle ve sürekli geliştir."
+    }
   },
   "common": {
-    "home": "Home",
+    "home": "Ana Sayfa",
     "blog": "Blog",
-    "contact": "Contact",
-    "faq": "FAQ",
-    "pricing": "Pricing"
+    "contact": "İletişim",
+    "faq": "SSS",
+    "pricing": "Fiyatlandırma"
+  },
+  "header": {
+    "networkingHubs": "Networking Hub'ları",
+    "pricing": "Fiyatlandırma",
+    "blog": "Blog",
+    "faq": "SSS",
+    "startNetworking": "Ağ Kurmaya Başla",
+    "downloadNow": "Şimdi İndir",
+    "menu": "Menü",
+    "closeMenu": "Menüyü kapat"
   },
   "error": {
-    "title": "Something went wrong",
-    "description": "An unexpected error occurred. Please try again.",
-    "tryAgain": "Try Again",
-    "notFoundTitle": "Page Not Found",
-    "notFoundDescription": "The page you're looking for doesn't exist.",
-    "goHome": "Go Home"
+    "title": "Bir şeyler yanlış gitti",
+    "description": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+    "tryAgain": "Tekrar Dene",
+    "notFoundTitle": "Sayfa Bulunamadı",
+    "notFoundDescription": "Aradığınız sayfa mevcut değil.",
+    "goHome": "Ana Sayfaya Dön"
   }
 }
