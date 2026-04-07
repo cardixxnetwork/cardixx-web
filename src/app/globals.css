@@ -25,7 +25,6 @@ body {
 }
 
 .mesh-background {
-  position: relative;
   background-color: #B6ECD8;
   background-image:
     radial-gradient(circle at center, #B6ECD8 0%, transparent 80%),

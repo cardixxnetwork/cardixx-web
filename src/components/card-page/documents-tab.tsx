@@ -8,7 +8,7 @@ interface FileItem {
   type?: string;
 }
 
-interface DocumentsTabProps {
+interface DocumentsSectionProps {
   card: CardFullFragment;
   noDocumentsLabel?: string;
 }
@@ -32,38 +32,44 @@ function parseFiles(fileUpload: unknown): FileItem[] {
   }
 }
 
-export function DocumentsTab({ card, noDocumentsLabel }: DocumentsTabProps) {
+export function DocumentsSection({ card, noDocumentsLabel }: DocumentsSectionProps) {
   const files = parseFiles(card.fileUpload);
 
   if (files.length === 0) {
     return (
-      <p className="text-sm text-gray-400">{noDocumentsLabel ?? "No documents available."}</p>
+      <section id="documents" className="scroll-mt-[80px]">
+        <h2 className="text-xl font-semibold text-[#252827]">Documents</h2>
+        <p className="mt-4 text-sm text-[#8E9290]">{noDocumentsLabel ?? "No documents available."}</p>
+      </section>
     );
   }
 
   return (
-    <div className="space-y-3">
-      {files.map((file, index) => (
-        <a
-          key={file.url ?? index}
-          href={file.url ?? "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-colors hover:bg-gray-50"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100">
-            <FileText className="h-5 w-5 text-gray-500" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-gray-900">
-              {file.name ?? `Document ${index + 1}`}
-            </p>
-            {file.size != null && (
-              <p className="text-xs text-gray-400">{formatFileSize(file.size)}</p>
-            )}
-          </div>
-        </a>
-      ))}
-    </div>
+    <section id="documents" className="scroll-mt-[80px]">
+      <h2 className="mb-4 text-xl font-semibold text-[#252827]">Documents</h2>
+      <div className="flex flex-wrap gap-3">
+        {files.map((file, index) => (
+          <a
+            key={file.url ?? index}
+            href={file.url ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-[252px] items-center gap-4 rounded-2xl border border-dashed border-[#CDD0CE] p-4 transition-colors hover:bg-[#FAFAFA]"
+          >
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center">
+              <FileText className="h-6 w-6 text-red-500" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-base font-semibold text-[#404644]">
+                {file.name ?? `Document ${index + 1}`}
+              </p>
+              {file.size != null && (
+                <p className="text-[13px] font-medium text-[#8E9290]">{formatFileSize(file.size)}</p>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
   );
 }

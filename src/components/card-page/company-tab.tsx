@@ -1,58 +1,62 @@
 import Image from "next/image";
 import type { CardFullFragment } from "@/graphql/generated/graphql";
 
-interface CompanyTabProps {
+interface CompanySectionProps {
   card: CardFullFragment;
   industryLabel: string;
   specialtiesLabel: string;
 }
 
-export function CompanyTab({ card, industryLabel, specialtiesLabel }: CompanyTabProps) {
+export function CompanySection({ card, industryLabel, specialtiesLabel }: CompanySectionProps) {
   if (!card.companyName && !card.about && !card.companyLogo) {
     return null;
   }
 
   return (
-    <div className="space-y-5">
+    <section id="company" className="scroll-mt-[80px] space-y-4">
+      <h2 className="text-xl font-semibold text-[#252827]">Company</h2>
+
       {card.companyLogo && (
-        <div className="w-20">
+        <div className="h-12 w-52">
           <Image
             src={card.companyLogo}
             alt={card.companyName ?? "Company"}
-            width={80}
-            height={80}
-            className="h-auto w-full rounded-lg object-contain"
+            width={208}
+            height={48}
+            className="h-full w-auto object-contain"
           />
         </div>
       )}
 
       {card.companyName && (
-        <h2 className="text-lg font-bold text-gray-900">{card.companyName}</h2>
+        <p className="text-base font-semibold text-[#404644]">{card.companyName}</p>
       )}
 
       {card.about && (
-        <p className="whitespace-pre-line text-sm leading-relaxed text-gray-600">
+        <p className="whitespace-pre-line text-base leading-relaxed text-[#404644]">
           {card.about}
         </p>
       )}
 
-      {card.industry && (
-        <div>
-          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-            {industryLabel}
-          </span>
-          <p className="mt-1 text-sm text-gray-700">{card.industry}</p>
-        </div>
-      )}
-
-      {card.specialties && (
-        <div>
-          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-            {specialtiesLabel}
-          </span>
-          <p className="mt-1 text-sm text-gray-700">{card.specialties}</p>
-        </div>
-      )}
-    </div>
+      {/* Industry / Specialties detail rows */}
+      <div className="flex flex-col gap-6 pt-4">
+        {card.industry && (
+          <div className="flex gap-6">
+            <span className="w-[160px] shrink-0 text-sm font-semibold text-[#8E9290]">
+              {industryLabel}
+            </span>
+            <p className="min-w-0 flex-1 text-base text-[#404644]">{card.industry}</p>
+          </div>
+        )}
+        {card.specialties && (
+          <div className="flex gap-6">
+            <span className="w-[160px] shrink-0 text-sm font-semibold text-[#8E9290]">
+              {specialtiesLabel}
+            </span>
+            <p className="min-w-0 flex-1 text-base text-[#404644]">{card.specialties}</p>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

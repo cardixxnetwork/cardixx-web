@@ -11,10 +11,9 @@ import { LanguageSelector } from "./language-selector";
 import { MobileNav } from "./mobile-nav";
 
 const NAV_LINKS = [
-  { key: "networkingHubs", href: "/#networking-hubs" },
+  { key: "networkingHubs", href: "/networking-hubs" },
   { key: "pricing", href: "/pricing" },
   { key: "blog", href: "/blog" },
-  { key: "faq", href: "/#faq" },
 ] as const;
 
 function HamburgerButton({

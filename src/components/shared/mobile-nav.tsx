@@ -9,10 +9,9 @@ import { Logo } from "./logo";
 import { LanguageSelector } from "./language-selector";
 
 const NAV_LINKS = [
-  { key: "networkingHubs", href: "/#networking-hubs" },
+  { key: "networkingHubs", href: "/networking-hubs" },
   { key: "pricing", href: "/pricing" },
   { key: "blog", href: "/blog" },
-  { key: "faq", href: "/#faq" },
 ] as const;
 
 interface MobileNavProps {
@@ -166,7 +165,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
               <Link
                 href="/#start"
                 onClick={onClose}
-                className="flex h-14 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-brand-light to-brand-dark text-base font-semibold text-white"
+                className="flex h-14 items-center justify-center gap-2 rounded-full bg-linear-to-b from-brand-light to-brand-dark text-base font-semibold text-white"
               >
                 {t("startNetworking")}
                 <ArrowRight className="size-5" />
