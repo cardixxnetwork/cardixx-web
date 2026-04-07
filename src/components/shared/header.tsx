@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { LanguageSelector } from "./language-selector";
 import { MobileNav } from "./mobile-nav";
+import { CtaButtonLink } from "./cta-button";
 
 const NAV_LINKS = [
   { key: "networkingHubs", href: "/networking-hubs" },
@@ -34,7 +35,7 @@ function HamburgerButton({
     <button
       type="button"
       onClick={onClick}
-      className="relative z-[60] flex size-10 flex-col items-center justify-center gap-[5px] lg:hidden"
+      className="relative z-60 flex size-10 flex-col items-center justify-center gap-[5px] lg:hidden"
       aria-label={label}
       aria-expanded={isOpen}
     >
@@ -134,17 +135,9 @@ export function Header() {
           <div className="hidden min-w-0 flex-1 items-center justify-end gap-3 lg:flex">
             <LanguageSelector />
 
-            <Link
-              href="/#start"
-              className="group relative flex h-12 shrink-0 items-center justify-center gap-2 overflow-visible rounded-full px-8 text-sm font-semibold text-white transition-shadow hover:shadow-[0_0_32px_rgba(28,185,130,0.5)]"
-              style={{
-                background:
-                  "radial-gradient(ellipse at 50% 0%, #11BE82, #00A068)",
-              }}
-            >
+            <CtaButtonLink href="/#start" className="w-auto shrink-0 px-8 text-sm">
               {t("startNetworking")}
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
+            </CtaButtonLink>
           </div>
 
           {/* Mobile: placeholder for layout balance */}

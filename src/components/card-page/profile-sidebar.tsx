@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Phone, Mail, Globe, MapPin } from "lucide-react";
 import type { CardFullFragment } from "@/graphql/generated/graphql";
 import { buildSocialLinks } from "@/utils/social-platforms";
+import { CtaButton, CtaOutlineButton } from "@/components/shared/cta-button";
 
 const APP_STORE_URL = "https://apps.apple.com/app/cardixx";
 const PLAY_STORE_URL =
@@ -337,58 +338,27 @@ export function ProfileSidebar({ card, translations: t }: ProfileSidebarProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className="flex items-center rounded-lg border border-[#EDEEED] p-2 text-[#252827] transition-colors hover:bg-[#FAFAFA]"
-                dangerouslySetInnerHTML={{ __html: link.svgHtml }}
-              />
+                className="flex items-center rounded-lg border border-[#EDEEED] p-2 transition-colors hover:bg-[#FAFAFA]"
+              >
+                {link.iconPath ? (
+                  <Image src={link.iconPath} alt={link.label} width={24} height={24} className="h-6 w-6" />
+                ) : (
+                  <span className="h-6 w-6 text-[#252827]" dangerouslySetInnerHTML={{ __html: link.svgHtml }} />
+                )}
+              </a>
             ))}
           </div>
         )}
 
         {/* CTA Buttons */}
         <div className="flex flex-col gap-4">
-          {/* Save to Wallet - green gradient with glow */}
-          <div className="flex flex-col items-center pb-6">
-            <button
-              type="button"
-              onClick={handleCtaClick}
-              className="relative z-2 mb-[-24px] flex h-12 w-full items-center justify-center gap-2 rounded-full text-base font-semibold text-white"
-              style={{
-                background:
-                  "radial-gradient(ellipse at center bottom, #00A068, #11BE82)",
-              }}
-            >
-              {t.saveToWallet}
-              <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
-                <path
-                  d="M5 15L15 5M15 5H8M15 5V12"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            {/* Glow */}
-            <div className="z-1 mx-6 h-6 w-full rounded-[26px] bg-white opacity-60 shadow-[0px_0px_24px_0px_#1cb982]" />
-          </div>
+          <CtaButton onClick={handleCtaClick} glow>
+            {t.saveToWallet}
+          </CtaButton>
 
-          {/* Send Contact Request */}
-          <button
-            type="button"
-            onClick={handleCtaClick}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-[#8E9290] text-base font-semibold text-[#252827] transition-colors hover:bg-[#FAFAFA]"
-          >
+          <CtaOutlineButton onClick={handleCtaClick} className="w-full">
             {t.sendContactRequest}
-            <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
-              <path
-                d="M5 15L15 5M15 5H8M15 5V12"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+          </CtaOutlineButton>
         </div>
       </div>
 

@@ -13,7 +13,6 @@ import { prepareEmbedHtml } from "@/lib/card-fonts";
 import { buildSocialLinks } from "@/utils/social-platforms";
 import { CardHero } from "@/components/card-page/card-hero";
 import { ProfileSidebar } from "@/components/card-page/profile-sidebar";
-import { ScrollTabs } from "@/components/card-page/scroll-tabs";
 import { AboutSection } from "@/components/card-page/about-tab";
 import { CompanySection } from "@/components/card-page/company-tab";
 import { DocumentsSection } from "@/components/card-page/documents-tab";
@@ -212,12 +211,6 @@ export default async function CardPage({ params, searchParams }: PageProps) {
     url: `https://cardixx.com/c/${cardId}`,
   };
 
-  const tabs = [
-    { id: "about", label: t("about") },
-    { id: "company", label: t("company") },
-    { id: "documents", label: t("documents") },
-  ];
-
   const sidebarTranslations = {
     phone: t("phone"),
     email: t("email"),
@@ -252,11 +245,6 @@ export default async function CardPage({ params, searchParams }: PageProps) {
               name={fullName}
             />
           </div>
-        </div>
-
-        {/* ─── Scroll Tabs (desktop only, sticky) ─── */}
-        <div className="mt-8">
-          <ScrollTabs tabs={tabs} />
         </div>
 
         {/* ─── Mobile Layout ─── */}
@@ -298,9 +286,14 @@ export default async function CardPage({ params, searchParams }: PageProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={link.label}
-                  className="flex items-center rounded-lg border border-[#EDEEED] p-2 text-[#252827] transition-colors hover:bg-[#FAFAFA]"
-                  dangerouslySetInnerHTML={{ __html: link.svgHtml }}
-                />
+                  className="flex items-center rounded-lg border border-[#EDEEED] p-2 transition-colors hover:bg-[#FAFAFA]"
+                >
+                  {link.iconPath ? (
+                    <Image src={link.iconPath} alt={link.label} width={24} height={24} className="h-6 w-6" />
+                  ) : (
+                    <span className="h-6 w-6 text-[#252827]" dangerouslySetInnerHTML={{ __html: link.svgHtml }} />
+                  )}
+                </a>
               ))}
             </div>
           )}
@@ -368,7 +361,7 @@ export default async function CardPage({ params, searchParams }: PageProps) {
         <div className="mx-auto hidden max-w-6xl px-8 pt-8 lg:grid lg:grid-cols-[1fr_412px] lg:gap-8">
           {/* Left column: all sections */}
           <div>
-            <AboutSection card={card} skillsLabel={t("skills")} />
+              <AboutSection card={card} skillsLabel={t("skills")} />
 
             <hr className="my-8 border-[#EDEEED]" />
 
@@ -385,7 +378,7 @@ export default async function CardPage({ params, searchParams }: PageProps) {
 
           {/* Right column: sticky sidebar */}
           <aside>
-            <div className="sticky top-[72px]">
+            <div className="sticky top-[24px]">
               <ProfileSidebar card={card} translations={sidebarTranslations} />
             </div>
           </aside>

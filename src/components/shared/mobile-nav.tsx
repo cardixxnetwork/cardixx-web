@@ -7,6 +7,7 @@ import { ArrowRight, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "./logo";
 import { LanguageSelector } from "./language-selector";
+import { CtaButtonLink } from "./cta-button";
 
 const NAV_LINKS = [
   { key: "networkingHubs", href: "/networking-hubs" },
@@ -112,19 +113,22 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             className="fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-y-auto bg-white lg:hidden"
             aria-label="Mobile navigation"
           >
-            {/* Top bar with logo + close */}
+            {/* Top bar with logo + language + close */}
             <div className="flex items-center justify-between px-5 py-4 md:px-8">
               <Link href="/" onClick={onClose} aria-label="Cardixx Home">
                 <Logo width={120} height={47} />
               </Link>
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex size-10 items-center justify-center rounded-full transition-colors hover:bg-[#EDEEED]"
-                aria-label={t("closeMenu")}
-              >
-                <X className="size-6 text-[#252827]" strokeWidth={2} />
-              </button>
+              <div className="flex items-center gap-2">
+                <LanguageSelector variant="mobile" />
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex size-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-[#EDEEED]"
+                  aria-label={t("closeMenu")}
+                >
+                  <X className="size-6 text-[#252827]" strokeWidth={2} />
+                </button>
+              </div>
             </div>
 
             {/* Logo watermark */}
@@ -160,16 +164,9 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
               animate="visible"
               className="mt-auto flex shrink-0 flex-col gap-4 px-5 pb-8 md:px-8"
             >
-              <LanguageSelector variant="mobile" />
-
-              <Link
-                href="/#start"
-                onClick={onClose}
-                className="flex h-14 items-center justify-center gap-2 rounded-full bg-linear-to-b from-brand-light to-brand-dark text-base font-semibold text-white"
-              >
+              <CtaButtonLink href="/#start" className="h-14 w-full">
                 {t("startNetworking")}
-                <ArrowRight className="size-5" />
-              </Link>
+              </CtaButtonLink>
             </motion.div>
           </motion.nav>
         </>

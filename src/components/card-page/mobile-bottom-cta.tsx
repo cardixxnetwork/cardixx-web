@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, useEffect } from "react";
+import { CtaButton } from "@/components/shared/cta-button";
 
 const APP_STORE_URL = "https://apps.apple.com/app/cardixx";
 const PLAY_STORE_URL =
@@ -54,27 +55,10 @@ export function MobileBottomCta({
   return (
     <>
       <div className="fixed inset-x-0 bottom-0 z-20 lg:hidden">
-        <div className="bg-gradient-to-t from-white via-white/80 to-transparent px-6 pb-6 pt-10">
-          <button
-            type="button"
-            onClick={handleClick}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full text-base font-semibold text-white"
-            style={{
-              background:
-                "radial-gradient(ellipse at center bottom, #00A068, #11BE82)",
-            }}
-          >
+        <div className="bg-linear-to-t from-white via-white/80 to-transparent px-6 pb-6 pt-10">
+          <CtaButton onClick={handleClick} className="w-full">
             {label}
-            <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
-              <path
-                d="M5 15L15 5M15 5H8M15 5V12"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+          </CtaButton>
         </div>
       </div>
 

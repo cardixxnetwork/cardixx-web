@@ -13,3 +13,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | Desktop | >= 1024px       | `lg:`           |
 
 Mobile navigation activates below the `lg` breakpoint (1024px).
+
+## Styling Conventions
+
+- All clickable elements (buttons, links, interactive controls) must have `cursor-pointer`.

@@ -1,6 +1,6 @@
 /**
  * Social platform configuration for card pages.
- * Uses the same SVG icons as cardixx-themes for consistency.
+ * Uses colorful PNG icons from /public/images/social/ (same as cardixx-mobile).
  */
 
 import { SOCIAL_LINK_FIELDS, getSocialIconSvg } from './social-icons';
@@ -10,6 +10,34 @@ export interface SocialPlatformDef {
   label: string;
   baseUrl: string;
 }
+
+/** Maps platform key to PNG filename (in /public/images/social/) */
+const ICON_FILENAMES: Record<string, string> = {
+  linkedin: 'linkedln.png', // matches mobile asset typo
+  instagram: 'instagram.png',
+  x: 'x.png',
+  facebook: 'facebook.png',
+  tiktok: 'tiktok.png',
+  youtube: 'youtube.png',
+  github: 'github.png',
+  dribbble: 'dribbble.png',
+  behance: 'behance.png',
+  snapchat: 'snapchat.png',
+  pinterest: 'pinterest.png',
+  threads: 'threads.png',
+  patreon: 'patreon.png',
+  spotify: 'spotify.png',
+  soundcloud: 'soundcloud.png',
+  appleMusic: 'applemusic.png',
+  whatsapp: 'whatsapp.png',
+  telegram: 'telegram.png',
+  discord: 'discord.png',
+  signal: 'signal.png',
+  line: 'line.png',
+  zoom: 'zoom.png',
+  calendly: 'calendly.png',
+  bookings: 'bookings.png',
+};
 
 const BASE_URLS: Record<string, { label: string; baseUrl: string }> = {
   linkedin: { label: 'LinkedIn', baseUrl: 'https://linkedin.com/in/' },
@@ -32,6 +60,10 @@ const BASE_URLS: Record<string, { label: string; baseUrl: string }> = {
   telegram: { label: 'Telegram', baseUrl: 'https://t.me/' },
   discord: { label: 'Discord', baseUrl: 'https://discord.gg/' },
   signal: { label: 'Signal', baseUrl: 'https://signal.me/#p/' },
+  line: { label: 'LINE', baseUrl: 'https://line.me/R/ti/p/' },
+  zoom: { label: 'Zoom', baseUrl: 'https://zoom.us/j/' },
+  calendly: { label: 'Calendly', baseUrl: 'https://calendly.com/' },
+  bookings: { label: 'Bookings', baseUrl: '' },
 };
 
 export function buildSocialUrl(key: string, value: string): string {
@@ -46,6 +78,9 @@ export interface ResolvedSocialLink {
   key: string;
   url: string;
   label: string;
+  /** Path to colorful PNG icon (e.g. /images/social/whatsapp.png) */
+  iconPath: string;
+  /** Fallback monochrome SVG HTML from cardixx-themes */
   svgHtml: string;
 }
 
@@ -58,8 +93,12 @@ export function buildSocialLinks(
 ): ResolvedSocialLink[] {
   const links: ResolvedSocialLink[] = [];
 
-  // Also check communication platforms not in SOCIAL_LINK_FIELDS
-  const allKeys = [...SOCIAL_LINK_FIELDS, 'whatsapp', 'telegram', 'discord', 'signal'];
+  // Check all known platforms
+  const allKeys = [
+    ...SOCIAL_LINK_FIELDS,
+    'whatsapp', 'telegram', 'discord', 'signal', 'line',
+    'zoom', 'calendly', 'bookings',
+  ];
   const seen = new Set<string>();
 
   for (const key of allKeys) {
@@ -72,10 +111,13 @@ export function buildSocialLinks(
     const def = BASE_URLS[key];
     if (!def) continue;
 
+    const filename = ICON_FILENAMES[key];
+
     links.push({
       key,
       url: buildSocialUrl(key, value),
       label: def.label,
+      iconPath: filename ? `/images/social/${filename}` : '',
       svgHtml: getSocialIconSvg(key),
     });
   }
