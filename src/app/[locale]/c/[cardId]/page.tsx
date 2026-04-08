@@ -228,6 +228,20 @@ export default async function CardPage({ params, searchParams }: PageProps) {
   // Build social links using the shared utility (same icons as cardixx-themes)
   const socialLinks = buildSocialLinks(card as unknown as Record<string, unknown>);
 
+  const hasCompany = !!(card.companyName || card.about || card.companyLogo);
+  const hasDocuments = (() => {
+    const f = card.fileUpload;
+    if (!f) return false;
+    if (Array.isArray(f)) return f.length > 0;
+    if (typeof f === "object") return true;
+    try {
+      const parsed = JSON.parse(String(f));
+      return Array.isArray(parsed) ? parsed.length > 0 : !!parsed;
+    } catch {
+      return false;
+    }
+  })();
+
   return (
     <>
       <script
@@ -340,40 +354,56 @@ export default async function CardPage({ params, searchParams }: PageProps) {
             )}
           </div>
 
-          {/* Divider */}
-          <hr className="my-8 border-[#EDEEED]" />
+          {hasCompany && (
+            <>
+              {/* Divider */}
+              <hr className="my-8 border-[#EDEEED]" />
 
-          {/* Company section (mobile) */}
-          <CompanySection
-            card={card}
-            industryLabel={t("industry")}
-            specialtiesLabel={t("specialties")}
-          />
+              {/* Company section (mobile) */}
+              <CompanySection
+                card={card}
+                industryLabel={t("industry")}
+                specialtiesLabel={t("specialties")}
+              />
+            </>
+          )}
 
-          {/* Divider */}
-          <hr className="my-8 border-[#EDEEED]" />
+          {hasDocuments && (
+            <>
+              {/* Divider */}
+              <hr className="my-8 border-[#EDEEED]" />
 
-          {/* Documents section (mobile) */}
-          <DocumentsSection card={card} noDocumentsLabel={t("noDocuments")} />
+              {/* Documents section (mobile) */}
+              <DocumentsSection card={card} noDocumentsLabel={t("noDocuments")} />
+            </>
+          )}
         </div>
 
         {/* ─── Desktop Layout: two columns ─── */}
         <div className="mx-auto hidden max-w-6xl px-8 pt-8 lg:grid lg:grid-cols-[1fr_412px] lg:gap-8">
           {/* Left column: all sections */}
           <div>
-              <AboutSection card={card} skillsLabel={t("skills")} />
+            <AboutSection card={card} skillsLabel={t("skills")} />
 
-            <hr className="my-8 border-[#EDEEED]" />
+            {hasCompany && (
+              <>
+                <hr className="my-8 border-[#EDEEED]" />
 
-            <CompanySection
-              card={card}
-              industryLabel={t("industry")}
-              specialtiesLabel={t("specialties")}
-            />
+                <CompanySection
+                  card={card}
+                  industryLabel={t("industry")}
+                  specialtiesLabel={t("specialties")}
+                />
+              </>
+            )}
 
-            <hr className="my-8 border-[#EDEEED]" />
+            {hasDocuments && (
+              <>
+                <hr className="my-8 border-[#EDEEED]" />
 
-            <DocumentsSection card={card} noDocumentsLabel={t("noDocuments")} />
+                <DocumentsSection card={card} noDocumentsLabel={t("noDocuments")} />
+              </>
+            )}
           </div>
 
           {/* Right column: sticky sidebar */}

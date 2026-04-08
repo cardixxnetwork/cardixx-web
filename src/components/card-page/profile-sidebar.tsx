@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Phone, Mail, Globe, MapPin } from "lucide-react";
 import type { CardFullFragment } from "@/graphql/generated/graphql";
 import { buildSocialLinks } from "@/utils/social-platforms";
-import { CtaButton, CtaOutlineButton } from "@/components/shared/cta-button";
+import { CtaButton } from "@/components/shared/cta-button";
 
 const APP_STORE_URL = "https://apps.apple.com/app/cardixx";
 const PLAY_STORE_URL =
@@ -355,10 +355,10 @@ export function ProfileSidebar({ card, translations: t }: ProfileSidebarProps) {
           <CtaButton onClick={handleCtaClick} glow>
             {t.saveToWallet}
           </CtaButton>
-
-          <CtaOutlineButton onClick={handleCtaClick} className="w-full">
+          {/* TODO: Do not delete, this will be activated later on when we have send contact request feature on cardixx-core */}
+          {/* <CtaOutlineButton onClick={handleCtaClick} className="w-full">
             {t.sendContactRequest}
-          </CtaOutlineButton>
+          </CtaOutlineButton> */}
         </div>
       </div>
 

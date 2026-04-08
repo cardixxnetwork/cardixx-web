@@ -4,6 +4,7 @@ import type { CardFullFragment } from "@/graphql/generated/graphql";
 interface FileItem {
   name?: string;
   url?: string;
+  uri?: string;
   size?: number;
   type?: string;
 }
@@ -50,8 +51,8 @@ export function DocumentsSection({ card, noDocumentsLabel }: DocumentsSectionPro
       <div className="flex flex-wrap gap-3">
         {files.map((file, index) => (
           <a
-            key={file.url ?? index}
-            href={file.url ?? "#"}
+            key={file.url ?? file.uri ?? index}
+            href={file.url ?? file.uri ?? "#"}
             target="_blank"
             rel="noopener noreferrer"
             className="flex w-[252px] items-center gap-4 rounded-2xl border border-dashed border-[#CDD0CE] p-4 transition-colors hover:bg-[#FAFAFA]"
