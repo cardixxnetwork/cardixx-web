@@ -1,4 +1,5 @@
 import type React from "react";
+import type { ServerFunctionClientArgs } from "payload";
 import config from "@payload-config";
 import { RootLayout } from "@payloadcms/next/layouts";
 import { handleServerFunctions } from "@payloadcms/next/layouts";
@@ -12,10 +13,10 @@ type Args = {
   children: React.ReactNode;
 };
 
-const serverFunction = async (args: unknown) => {
+const serverFunction = async (args: ServerFunctionClientArgs) => {
   "use server";
   return handleServerFunctions({
-    ...(args as Record<string, unknown>),
+    ...args,
     config,
     importMap,
   });

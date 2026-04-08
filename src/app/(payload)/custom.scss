@@ -1,1 +1,8 @@
-/* Custom Payload admin styles — keep empty or add overrides */
+/* Make the Payload admin wrapper fill the viewport since we use
+   a <div data-theme> instead of Payload's default <html> wrapper. */
+
+[data-theme] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { RemoveScroll } from "react-remove-scroll";
 import { useTranslations } from "next-intl";
 import { ArrowRight, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -68,17 +68,6 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const t = useTranslations("header");
   const shouldReduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
   const activePanel = shouldReduceMotion
     ? panelVariantsReduced
     : panelVariants;
@@ -88,7 +77,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
+        <RemoveScroll>
           {/* Backdrop */}
           <motion.div
             key="mobile-nav-backdrop"
@@ -169,7 +158,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
               </CtaButtonLink>
             </motion.div>
           </motion.nav>
-        </>
+        </RemoveScroll>
       )}
     </AnimatePresence>
   );

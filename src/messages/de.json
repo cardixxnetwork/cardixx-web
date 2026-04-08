@@ -1,97 +1,97 @@
 {
   "card": {
-    "about": "Über",
-    "company": "Unternehmen",
-    "documents": "Dokumente",
-    "saveToWallet": "In Cardixx Wallet speichern",
-    "sendContactRequest": "Kontaktanfrage senden",
-    "skills": "Fähigkeiten",
-    "phone": "Telefon",
+    "about": "About",
+    "company": "Company",
+    "documents": "Documents",
+    "saveToWallet": "Save to Cardixx Wallet",
+    "sendContactRequest": "Send Contact Request",
+    "skills": "Skills",
+    "phone": "Phone",
     "email": "E-Mail",
-    "website": "Webseite",
-    "location": "Standort",
-    "industry": "Branche",
-    "specialties": "Spezialgebiete",
-    "noDocuments": "Keine Dokumente verfügbar.",
-    "flipHint": "Klicken oder wischen zum Umdrehen",
-    "downloadOnAppStore": "Laden im App Store",
-    "getItOnGooglePlay": "Jetzt bei Google Play",
-    "getTheApp": "Hol dir die Cardixx App",
-    "notFound": "Karte nicht gefunden",
-    "notFoundDescription": "Diese Karte existiert nicht oder ist privat."
+    "website": "Website",
+    "location": "Location",
+    "industry": "Industry",
+    "specialties": "Specialties",
+    "noDocuments": "No documents available.",
+    "flipHint": "Click or swipe to flip",
+    "downloadOnAppStore": "Download on the App Store",
+    "getItOnGooglePlay": "Get it on Google Play",
+    "getTheApp": "Get the Cardixx App",
+    "notFound": "Card not found",
+    "notFoundDescription": "This card doesn't exist or is private."
   },
   "landing": {
-    "title": "Das Betriebssystem für professionelles Networking",
-    "subtitle": "Networking einfach, bewusst und messbar gemacht.",
-    "cta": "Jetzt Netzwerken",
-    "promoPill": "Das Warten hat ein Ende.",
-    "promoAction": "Gratis testen",
-    "appStore": "Laden im App Store",
-    "googlePlay": "Jetzt bei Google Play"
+    "title": "The Operating System for Professional Networking",
+    "subtitle": "Networking Made Simple, Intentional, and Measurable.",
+    "cta": "Start Networking",
+    "promoPill": "The wait is over.",
+    "promoAction": "Try It Free",
+    "appStore": "Download on the App Store",
+    "googlePlay": "Get it on Google Play"
   },
   "hero": {
-    "next": "Weiter",
-    "tryYourself": "Selbst ausprobieren",
+    "next": "Next",
+    "tryYourself": "Try Yourself",
     "join": {
-      "title": "Cardixx beitreten",
-      "shortTitle": "Cardixx beitreten",
-      "description": "und in eine neue Ära des professionellen Networkings eintreten.",
-      "shortDescription": "und in eine neue Ära des professionellen Networkings eintreten."
+      "title": "Join Cardixx",
+      "shortTitle": "Join Cardixx",
+      "description": "and step into a new era of professional networking.",
+      "shortDescription": "and step into a new era of professional networking."
     },
     "create": {
-      "title": "Karte erstellen",
-      "shortTitle": "Erstellen",
-      "description": "Richte deine digitale Visitenkarte mit Beruf, Fähigkeiten ein und mach dich bereit fürs Netzwerken.",
-      "shortDescription": "deine Visitenkarte und mach dich bereit fürs Netzwerken."
+      "title": "Create Your Card",
+      "shortTitle": "Create",
+      "description": "Set up your digital business card with your profession, skills, and get ready for networking.",
+      "shortDescription": "your business card and get ready for networking."
     },
     "checkIn": {
-      "title": "An einem Ort einchecken",
-      "shortTitle": "Einchecken",
-      "description": "Komm in einem Coworking-Space, Café oder Event an, checke über die App ein und zeig anderen, dass du offen für Kontakte bist.",
-      "shortDescription": "am Ort und wähle deine Networking-Präferenzen."
+      "title": "Check In to a Location",
+      "shortTitle": "Check-in",
+      "description": "Arrive at a coworking space, café, or event, check in through the app, and let others know you're open to connect.",
+      "shortDescription": "at the venue and choose your networking preferences."
     },
     "discover": {
-      "title": "Entdecken & Match finden",
-      "shortTitle": "Entdecken",
-      "description": "Sieh, wer noch eingecheckt ist und filtere nach Beruf, Interessen oder Zielen, um deine idealen Kontakte zu finden.",
-      "shortDescription": "Fachleute in der Nähe, passend zu deinem Networking-Ziel."
+      "title": "Discover & Find Your Match",
+      "shortTitle": "Discover",
+      "description": "See who else is checked in and filter the room by profession, interests, or goals to discover your ideal connections.",
+      "shortDescription": "professionals nearby relevant to your networking intent."
     },
     "connect": {
-      "title": "Verbinden & Austauschen",
-      "shortTitle": "Verbinden",
-      "description": "Kontaktiere relevante Fachleute per In-App-Messaging und tausche deine digitalen Karten mit einem Fingertipp aus.",
-      "shortDescription": "per In-App-Messaging. Tausche deine Karte aus."
+      "title": "Connect & Exchange",
+      "shortTitle": "Connect",
+      "description": "Reach out to relevant professionals via in-app messaging and easily swap your digital cards with a single tap.",
+      "shortDescription": "with them via in-app messaging. Exchange your card."
     },
     "measure": {
-      "title": "Erfolg messen",
-      "shortTitle": "Messen",
-      "description": "Überwache deine Networking-Leistung, überprüfe deinen Kontaktverlauf und optimiere dein Profil für noch bessere Ergebnisse.",
-      "shortDescription": "deine Networking-Leistung und verbessere dich kontinuierlich."
+      "title": "Measure Your Success",
+      "shortTitle": "Measure",
+      "description": "Monitor your networking performance, review your connection history, and optimize your profile for even better results.",
+      "shortDescription": "your networking performance and improve continuously."
     }
   },
   "common": {
-    "home": "Startseite",
+    "home": "Home",
     "blog": "Blog",
-    "contact": "Kontakt",
+    "contact": "Contact",
     "faq": "FAQ",
-    "pricing": "Preise"
+    "pricing": "Pricing"
   },
   "header": {
     "networkingHubs": "Networking Hubs",
-    "pricing": "Preise",
+    "pricing": "Pricing",
     "blog": "Blog",
     "faq": "FAQ",
-    "startNetworking": "Jetzt Netzwerken",
-    "downloadNow": "Jetzt herunterladen",
-    "menu": "Menü",
-    "closeMenu": "Menü schließen"
+    "startNetworking": "Start Networking",
+    "downloadNow": "Download Now",
+    "menu": "Menu",
+    "closeMenu": "Close menu"
   },
   "error": {
-    "title": "Etwas ist schiefgelaufen",
-    "description": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.",
-    "tryAgain": "Erneut versuchen",
-    "notFoundTitle": "Seite nicht gefunden",
-    "notFoundDescription": "Die gesuchte Seite existiert nicht.",
-    "goHome": "Zur Startseite"
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "tryAgain": "Try Again",
+    "notFoundTitle": "Page Not Found",
+    "notFoundDescription": "The page you're looking for doesn't exist.",
+    "goHome": "Go Home"
   }
 }

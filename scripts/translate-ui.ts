@@ -23,20 +23,11 @@ import * as path from "path";
 const MESSAGES_DIR = path.resolve(__dirname, "../src/messages");
 
 const LOCALES = [
-  "tr", "de", "fr", "es", "pt", "it", "nl", "pl", "cs", "sk",
-  "hu", "ro", "bg", "hr", "sl", "sr", "uk", "ru", "ja", "ko",
-  "zh", "ar", "hi", "th", "vi", "id", "ms", "sv", "da",
+  "tr", "de"
 ] as const;
 
 const LOCALE_NAMES: Record<string, string> = {
-  tr: "Turkish", de: "German", fr: "French", es: "Spanish",
-  pt: "Portuguese", it: "Italian", nl: "Dutch", pl: "Polish",
-  cs: "Czech", sk: "Slovak", hu: "Hungarian", ro: "Romanian",
-  bg: "Bulgarian", hr: "Croatian", sl: "Slovenian", sr: "Serbian",
-  uk: "Ukrainian", ru: "Russian", ja: "Japanese", ko: "Korean",
-  zh: "Chinese (Simplified)", ar: "Arabic", hi: "Hindi", th: "Thai",
-  vi: "Vietnamese", id: "Indonesian", ms: "Malay", sv: "Swedish",
-  da: "Danish",
+  tr: "Turkish", de: "German"
 };
 
 // ── Helpers ──
