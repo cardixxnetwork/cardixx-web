@@ -213,7 +213,7 @@ export function ProfileSidebar({ card, translations: t }: ProfileSidebarProps) {
               alt={card.companyName ?? "Company"}
               width={364}
               height={206}
-              className="h-auto w-full object-cover"
+              className="w-full object-cover" style={{ width: "auto", height: "auto" }}
             />
           </div>
         ) : null}
@@ -270,7 +270,7 @@ export function ProfileSidebar({ card, translations: t }: ProfileSidebarProps) {
                 className="flex items-center rounded-lg border border-[#EDEEED] p-2 transition-colors hover:bg-[#FAFAFA]"
               >
                 {link.iconPath ? (
-                  <Image src={link.iconPath} alt={link.label} width={24} height={24} className="w-6" />
+                  <img src={link.iconPath} alt={link.label} width={24} height={24} />
                 ) : (
                   <span className="h-6 w-6 text-[#252827]" dangerouslySetInnerHTML={{ __html: link.svgHtml }} />
                 )}

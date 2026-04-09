@@ -17,13 +17,13 @@ export function CompanySection({ card, industryLabel, specialtiesLabel }: Compan
       <h2 className="text-xl font-semibold text-[#252827]">Company</h2>
 
       {card.companyLogo && (
-        <div className="h-12 w-52">
+        <div className="relative h-12 w-52">
           <Image
             src={card.companyLogo}
             alt={card.companyName ?? "Company"}
-            width={208}
-            height={48}
-            className="h-full w-auto object-contain"
+            fill
+            sizes="208px"
+            className="object-contain object-left"
           />
         </div>
       )}
