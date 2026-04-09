@@ -11,15 +11,15 @@ import {
 
 interface MobileBottomCtaProps {
   label: string;
-  downloadOnAppStore: string;
-  getItOnGooglePlay: string;
+  appStore: string;
+  googlePlay: string;
   getTheApp: string;
 }
 
 export function MobileBottomCta({
   label,
-  downloadOnAppStore,
-  getItOnGooglePlay,
+  appStore,
+  googlePlay,
   getTheApp,
 }: MobileBottomCtaProps) {
   const [showStoreModal, setShowStoreModal] = useState(false);
@@ -50,8 +50,8 @@ export function MobileBottomCta({
         onClose={() => setShowStoreModal(false)}
         translations={{
           getTheApp,
-          downloadOnAppStore,
-          getItOnGooglePlay,
+          appStore,
+          googlePlay,
         }}
       />
     </>

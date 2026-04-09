@@ -16,7 +16,7 @@ export function StoreBadges({ variant, labels, className }: StoreBadgesProps) {
           href={APP_STORE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-12 cursor-pointer items-center gap-2.5 rounded-xl bg-[#252827] px-5 transition-opacity hover:opacity-90"
+          className="flex h-13 cursor-pointer items-center gap-2.5 rounded-xl bg-[#252827] px-5 ring-1 ring-white/10 transition-opacity hover:opacity-90"
           aria-label={labels.appStore}
         >
           <AppleIcon />
@@ -33,7 +33,7 @@ export function StoreBadges({ variant, labels, className }: StoreBadgesProps) {
           href={PLAY_STORE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-12 cursor-pointer items-center gap-2.5 rounded-xl bg-[#252827] px-5 transition-opacity hover:opacity-90"
+          className="flex h-13 cursor-pointer items-center gap-2.5 rounded-xl bg-[#252827] px-5 ring-1 ring-white/10 transition-opacity hover:opacity-90"
           aria-label={labels.googlePlay}
         >
           <GooglePlayIcon />

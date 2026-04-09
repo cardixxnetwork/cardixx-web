@@ -218,8 +218,8 @@ export default async function CardPage({ params, searchParams }: PageProps) {
     location: t("location"),
     saveToWallet: t("saveToWallet"),
     sendContactRequest: t("sendContactRequest"),
-    downloadOnAppStore: t("downloadOnAppStore"),
-    getItOnGooglePlay: t("getItOnGooglePlay"),
+    appStore: t("downloadOnAppStore"),
+    googlePlay: t("getItOnGooglePlay"),
     getTheApp: t("getTheApp"),
   };
 
@@ -417,8 +417,8 @@ export default async function CardPage({ params, searchParams }: PageProps) {
         {/* ─── Mobile Bottom CTA ─── */}
         <MobileBottomCta
           label={t("saveToWallet")}
-          downloadOnAppStore={t("downloadOnAppStore")}
-          getItOnGooglePlay={t("getItOnGooglePlay")}
+          appStore={t("downloadOnAppStore")}
+          googlePlay={t("getItOnGooglePlay")}
           getTheApp={t("getTheApp")}
         />
       </main>

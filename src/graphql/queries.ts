@@ -31,6 +31,7 @@ export const PUBLIC_CARD_QUERY = `
       bio
       department
       headline
+      skills
       personalWebsite
       discord
       wechat

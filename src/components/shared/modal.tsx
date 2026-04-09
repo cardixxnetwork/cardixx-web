@@ -8,13 +8,13 @@ import { RemoveScroll } from "react-remove-scroll";
 const backdropVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.2 } },
-  exit: { opacity: 0, transition: { duration: 0.15 } },
+  exit: { opacity: 0, pointerEvents: "none" as const, transition: { duration: 0.15 } },
 };
 
 const backdropVariantsReduced = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0 } },
-  exit: { opacity: 0, transition: { duration: 0 } },
+  exit: { opacity: 0, pointerEvents: "none" as const, transition: { duration: 0 } },
 };
 
 const contentVariants = {
@@ -27,6 +27,7 @@ const contentVariants = {
   exit: {
     opacity: 0,
     scale: 0.95,
+    pointerEvents: "none" as const,
     transition: { type: "spring" as const, damping: 30, stiffness: 400 },
   },
 };
@@ -34,7 +35,7 @@ const contentVariants = {
 const contentVariantsReduced = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0 } },
-  exit: { opacity: 0, transition: { duration: 0 } },
+  exit: { opacity: 0, pointerEvents: "none" as const, transition: { duration: 0 } },
 };
 
 interface ModalProps {
@@ -86,7 +87,7 @@ export function Modal({ isOpen, onClose, children, className }: ModalProps) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm"
             onClick={onClose}
             aria-hidden="true"
           />

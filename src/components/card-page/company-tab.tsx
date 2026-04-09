@@ -48,12 +48,14 @@ export function CompanySection({ card, industryLabel, specialtiesLabel }: Compan
             <p className="min-w-0 flex-1 text-base text-[#404644]">{card.industry}</p>
           </div>
         )}
-        {card.specialties && (
+        {card.specialties && (card.specialties as string[]).length > 0 && (
           <div className="flex gap-6">
             <span className="w-[160px] shrink-0 text-sm font-semibold text-[#8E9290]">
               {specialtiesLabel}
             </span>
-            <p className="min-w-0 flex-1 text-base text-[#404644]">{card.specialties}</p>
+            <p className="min-w-0 flex-1 text-base text-[#404644]">
+              {(card.specialties as string[]).join(', ')}
+            </p>
           </div>
         )}
       </div>

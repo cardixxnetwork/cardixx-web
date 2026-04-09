@@ -63,6 +63,7 @@ export default async function Image({
           {card?.profilePhoto ? (
             <img
               src={card.profilePhoto}
+              alt={fullName}
               width={120}
               height={120}
               style={{

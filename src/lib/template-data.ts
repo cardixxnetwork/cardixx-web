@@ -187,6 +187,7 @@ const FIELD_KEYS = [
   "jobTitle",
   "department",
   "headline",
+  "skills",
   "personalWebsite",
   "companyName",
   "companyEmail",

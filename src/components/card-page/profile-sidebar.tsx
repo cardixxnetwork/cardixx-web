@@ -22,8 +22,8 @@ interface ProfileSidebarProps {
     location: string;
     saveToWallet: string;
     sendContactRequest: string;
-    downloadOnAppStore: string;
-    getItOnGooglePlay: string;
+    appStore: string;
+    googlePlay: string;
     getTheApp: string;
   };
 }
@@ -270,7 +270,7 @@ export function ProfileSidebar({ card, translations: t }: ProfileSidebarProps) {
                 className="flex items-center rounded-lg border border-[#EDEEED] p-2 transition-colors hover:bg-[#FAFAFA]"
               >
                 {link.iconPath ? (
-                  <Image src={link.iconPath} alt={link.label} width={24} height={24} className="h-6 w-6" />
+                  <Image src={link.iconPath} alt={link.label} width={24} height={24} className="w-6" />
                 ) : (
                   <span className="h-6 w-6 text-[#252827]" dangerouslySetInnerHTML={{ __html: link.svgHtml }} />
                 )}
@@ -295,8 +295,8 @@ export function ProfileSidebar({ card, translations: t }: ProfileSidebarProps) {
         isOpen={showStoreModal}
         onClose={() => setShowStoreModal(false)}
         translations={{
-          downloadOnAppStore: t.downloadOnAppStore,
-          getItOnGooglePlay: t.getItOnGooglePlay,
+          appStore: t.appStore,
+          googlePlay: t.googlePlay,
           getTheApp: t.getTheApp,
         }}
       />

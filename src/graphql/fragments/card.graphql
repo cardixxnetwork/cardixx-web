@@ -39,6 +39,7 @@ fragment CardFull on Card {
   # Professional
   department
   headline
+  skills
   # Contact
   personalWebsite
   # Communication

@@ -10,10 +10,7 @@ export function AboutSection({ card, skillsLabel }: AboutSectionProps) {
     .filter(Boolean)
     .join(" ");
 
-  const skills = card.specialties
-    ?.split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
+  const skills = (card.skills as string[] | null) ?? [];
 
   return (
     <section id="about" className="scroll-mt-[80px] space-y-6">
@@ -28,7 +25,7 @@ export function AboutSection({ card, skillsLabel }: AboutSectionProps) {
       </div>
 
       {/* Skills */}
-      {skills && skills.length > 0 && (
+      {skills.length > 0 && (
         <div>
           <h3 className="text-base font-semibold text-[#404644]">{skillsLabel}</h3>
           <div className="mt-3 flex flex-wrap gap-2">
