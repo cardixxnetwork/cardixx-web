@@ -10,7 +10,7 @@ export function StoreBadges({ variant, labels, className }: StoreBadgesProps) {
   if (variant === "badge") {
     return (
       <div
-        className={className ?? "flex flex-wrap justify-center gap-4"}
+        className={className ?? "flex flex-wrap justify-center gap-4 select-none"}
       >
         <a
           href={APP_STORE_URL}
@@ -20,7 +20,7 @@ export function StoreBadges({ variant, labels, className }: StoreBadgesProps) {
           aria-label={labels.appStore}
         >
           <AppleIcon />
-          <div className="text-left">
+          <div className="text-left select-none">
             <div className="text-[10px] leading-tight text-white/70">
               Download on the
             </div>
@@ -37,7 +37,7 @@ export function StoreBadges({ variant, labels, className }: StoreBadgesProps) {
           aria-label={labels.googlePlay}
         >
           <GooglePlayIcon />
-          <div className="text-left">
+          <div className="text-left select-none">
             <div className="text-[10px] leading-tight text-white/70">
               GET IT ON
             </div>

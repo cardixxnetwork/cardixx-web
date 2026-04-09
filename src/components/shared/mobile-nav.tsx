@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { RemoveScroll } from "react-remove-scroll";
 import { useTranslations } from "next-intl";
@@ -7,7 +8,13 @@ import { ArrowRight, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "./logo";
 import { LanguageSelector } from "./language-selector";
-import { CtaButtonLink } from "./cta-button";
+import { CtaButton } from "./cta-button";
+import { AppStoreModal } from "./app-store-modal";
+import {
+  APP_STORE_URL,
+  PLAY_STORE_URL,
+  getDevicePlatform,
+} from "@/lib/store-links";
 
 const NAV_LINKS = [
   { key: "networkingHubs", href: "/networking-hubs" },
@@ -67,6 +74,19 @@ const itemVariantsReduced = {
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const t = useTranslations("header");
   const shouldReduceMotion = useReducedMotion();
+  const [showStoreModal, setShowStoreModal] = useState(false);
+
+  const handleCtaClick = useCallback(() => {
+    const platform = getDevicePlatform();
+    if (platform === "ios") {
+      window.location.href = APP_STORE_URL;
+    } else if (platform === "android") {
+      window.location.href = PLAY_STORE_URL;
+    } else {
+      onClose();
+      setShowStoreModal(true);
+    }
+  }, [onClose]);
 
   const activePanel = shouldReduceMotion
     ? panelVariantsReduced
@@ -75,6 +95,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const activeItem = shouldReduceMotion ? itemVariantsReduced : itemVariants;
 
   return (
+    <>
     <AnimatePresence>
       {isOpen && (
         <RemoveScroll>
@@ -153,13 +174,24 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
               animate="visible"
               className="mt-auto flex shrink-0 flex-col gap-4 px-5 pb-8 md:px-8"
             >
-              <CtaButtonLink href="/#start" className="h-14 w-full">
+              <CtaButton onClick={handleCtaClick} className="h-14 w-full">
                 {t("startNetworking")}
-              </CtaButtonLink>
+              </CtaButton>
             </motion.div>
           </motion.nav>
         </RemoveScroll>
       )}
     </AnimatePresence>
+
+    <AppStoreModal
+      isOpen={showStoreModal}
+      onClose={() => setShowStoreModal(false)}
+      translations={{
+        getTheApp: t("getTheApp"),
+        appStore: t("appStore"),
+        googlePlay: t("googlePlay"),
+      }}
+    />
+    </>
   );
 }

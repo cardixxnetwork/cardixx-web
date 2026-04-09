@@ -3,13 +3,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { LanguageSelector } from "./language-selector";
 import { MobileNav } from "./mobile-nav";
-import { CtaButtonLink } from "./cta-button";
+import { CtaButton } from "./cta-button";
+import { AppStoreModal } from "./app-store-modal";
+import {
+  APP_STORE_URL,
+  PLAY_STORE_URL,
+  getDevicePlatform,
+} from "@/lib/store-links";
 
 const NAV_LINKS = [
   { key: "networkingHubs", href: "/networking-hubs" },
@@ -35,7 +40,7 @@ function HamburgerButton({
     <button
       type="button"
       onClick={onClick}
-      className="relative z-60 flex size-10 flex-col items-center justify-center gap-[5px] lg:hidden"
+      className="relative z-60 flex size-10 flex-col items-center justify-center gap-[5px] cursor-pointer lg:hidden"
       aria-label={label}
       aria-expanded={isOpen}
     >
@@ -72,6 +77,7 @@ export function Header() {
   const t = useTranslations("header");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showStoreModal, setShowStoreModal] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -88,6 +94,17 @@ export function Header() {
 
   const closeMobileNav = useCallback(() => {
     setMobileNavOpen(false);
+  }, []);
+
+  const handleCtaClick = useCallback(() => {
+    const platform = getDevicePlatform();
+    if (platform === "ios") {
+      window.location.href = APP_STORE_URL;
+    } else if (platform === "android") {
+      window.location.href = PLAY_STORE_URL;
+    } else {
+      setShowStoreModal(true);
+    }
   }, []);
 
   return (
@@ -135,9 +152,9 @@ export function Header() {
           <div className="hidden min-w-0 flex-1 items-center justify-end gap-3 lg:flex">
             <LanguageSelector />
 
-            <CtaButtonLink href="/#start" className="w-auto shrink-0 px-8 text-sm">
+            <CtaButton onClick={handleCtaClick} className="w-auto shrink-0 px-8 text-sm">
               {t("startNetworking")}
-            </CtaButtonLink>
+            </CtaButton>
           </div>
 
           {/* Mobile: placeholder for layout balance */}
@@ -147,6 +164,16 @@ export function Header() {
 
       {/* Mobile navigation overlay */}
       <MobileNav isOpen={mobileNavOpen} onClose={closeMobileNav} />
+
+      <AppStoreModal
+        isOpen={showStoreModal}
+        onClose={() => setShowStoreModal(false)}
+        translations={{
+          getTheApp: t("getTheApp"),
+          appStore: t("appStore"),
+          googlePlay: t("googlePlay"),
+        }}
+      />
     </>
   );
 }

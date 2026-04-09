@@ -303,7 +303,7 @@ export default async function CardPage({ params, searchParams }: PageProps) {
                   className="flex items-center rounded-lg border border-[#EDEEED] p-2 transition-colors hover:bg-[#FAFAFA]"
                 >
                   {link.iconPath ? (
-                    <Image src={link.iconPath} alt={link.label} width={24} height={24} className="h-6 w-6" />
+                    <Image src={link.iconPath} alt={link.label} width={24} height={24} className="w-6" />
                   ) : (
                     <span className="h-6 w-6 text-[#252827]" dangerouslySetInnerHTML={{ __html: link.svgHtml }} />
                   )}

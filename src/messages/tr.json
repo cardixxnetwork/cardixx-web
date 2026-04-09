@@ -84,7 +84,10 @@
     "startNetworking": "Start Networking",
     "downloadNow": "Download Now",
     "menu": "Menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "getTheApp": "Get the Cardixx App",
+    "appStore": "Download on the App Store",
+    "googlePlay": "Get it on Google Play"
   },
   "error": {
     "title": "Something went wrong",
