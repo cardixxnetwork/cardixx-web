@@ -127,7 +127,7 @@ export default function CardLoading() {
 
         {/* Right column: sticky sidebar */}
         <aside>
-          <div className="sticky top-[24px]">
+          <div className="sticky top-[96px]">
             <div className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-[0px_128px_36px_0px_rgba(0,0,0,0),0px_82px_33px_0px_rgba(0,0,0,0),0px_46px_28px_0px_rgba(0,0,0,0.02),0px_21px_21px_0px_rgba(0,0,0,0.03),0px_5px_11px_0px_rgba(0,0,0,0.03)]">
               {/* Profile header */}
               <div className="flex items-center gap-4">

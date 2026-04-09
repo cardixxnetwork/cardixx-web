@@ -552,22 +552,42 @@ export type CreateHubApplicationInput = {
 };
 
 export type CreateHubInput = {
-  /** Full address of the place */
+  /** Full formatted address (Address Line 1) */
   address: Scalars['String']['input'];
+  /** Address Line 2 */
+  addressLine2?: InputMaybe<Scalars['String']['input']>;
+  /** Amenity slugs */
+  amenities?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Weekly business hours schedule */
+  businessHours?: InputMaybe<Scalars['JSON']['input']>;
+  /** City or district */
+  city?: InputMaybe<Scalars['String']['input']>;
+  /** Country */
+  country?: InputMaybe<Scalars['String']['input']>;
   /** Hub description */
   description: Scalars['String']['input'];
   /** Google Places API ID for deduplication */
   googlePlaceId: Scalars['String']['input'];
-  /** Hub image URL */
-  image: Scalars['String']['input'];
+  /** Photo URLs — index 0 = main photo */
+  images: Array<Scalars['String']['input']>;
   /** Latitude coordinate */
   latitude: Scalars['Float']['input'];
   /** Longitude coordinate */
   longitude: Scalars['Float']['input'];
   /** Name of the place */
   name: Scalars['String']['input'];
+  /** Venue phone number */
+  phone?: InputMaybe<Scalars['String']['input']>;
   /** Place type from Google Places API (e.g. "Business Cafe") */
   primaryType?: InputMaybe<Scalars['String']['input']>;
+  /** Social media links as key-value pairs */
+  socialLinks?: InputMaybe<Scalars['JSON']['input']>;
+  /** State or province */
+  state?: InputMaybe<Scalars['String']['input']>;
+  /** Venue website URL */
+  website?: InputMaybe<Scalars['String']['input']>;
+  /** ZIP or postal code */
+  zipCode?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateNoteInput = {
@@ -735,9 +755,20 @@ export type Hub = {
   __typename?: 'Hub';
   /** Number of currently active check-ins at this hub */
   activeCheckInsCount?: Maybe<Scalars['Int']['output']>;
+  /** Full formatted address (Address Line 1) */
   address: Scalars['String']['output'];
+  /** Address Line 2 */
+  addressLine2?: Maybe<Scalars['String']['output']>;
+  /** Amenity slugs */
+  amenities: Array<Scalars['String']['output']>;
+  /** Weekly business hours schedule */
+  businessHours?: Maybe<Scalars['JSON']['output']>;
   /** Number of check-ins at this hub over the last 24 hours */
   checkInsLast24Hours?: Maybe<Scalars['Int']['output']>;
+  /** City or district */
+  city?: Maybe<Scalars['String']['output']>;
+  /** Country */
+  country?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   /** Hub description */
   description: Scalars['String']['output'];
@@ -746,14 +777,24 @@ export type Hub = {
   /** Google Places API ID for deduplication */
   googlePlaceId: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  /** Hub image URL */
-  image: Scalars['String']['output'];
+  /** Photo URLs — index 0 = main photo */
+  images: Array<Scalars['String']['output']>;
   latitude: Scalars['Float']['output'];
   longitude: Scalars['Float']['output'];
   name: Scalars['String']['output'];
+  /** Venue phone number */
+  phone?: Maybe<Scalars['String']['output']>;
   /** Place type from Google Places API (e.g. "Business Cafe") */
   primaryType?: Maybe<Scalars['String']['output']>;
+  /** Social media links as key-value pairs */
+  socialLinks?: Maybe<Scalars['JSON']['output']>;
+  /** State or province */
+  state?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
+  /** Venue website URL */
+  website?: Maybe<Scalars['String']['output']>;
+  /** ZIP or postal code */
+  zipCode?: Maybe<Scalars['String']['output']>;
 };
 
 export type HubApplication = {
@@ -1335,6 +1376,8 @@ export type Query = {
   placeDetails?: Maybe<PlaceDetails>;
   /** Get a public card by ID (only returns cards with isPrivate === false) */
   publicCard?: Maybe<Card>;
+  /** Get a public hub by ID (no auth required) */
+  publicHub?: Maybe<Hub>;
   /** Get messages in a chat room */
   roomMessages: Array<Message>;
   /** Get all tags for a wallet card */
@@ -1457,6 +1500,11 @@ export type QueryPlaceDetailsArgs = {
 export type QueryPublicCardArgs = {
   id: Scalars['String']['input'];
   source?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryPublicHubArgs = {
+  id: Scalars['String']['input'];
 };
 
 

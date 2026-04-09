@@ -122,6 +122,34 @@ export function CtaOutlineButtonLink({ children, href, className }: Omit<CtaButt
   );
 }
 
+export function CtaButtonExternalLink({ children, href, className, glow }: CtaButtonLinkProps) {
+  const { ref, pos, hovering, onMouseMove, setHovering } = useSpotlight();
+
+  return (
+    <div className="flex flex-col items-center">
+      <a
+        ref={ref as React.RefObject<HTMLAnchorElement>}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onMouseMove={onMouseMove}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+        style={{ background: BG_GRADIENT }}
+        className={`${BUTTON_CLASS} ${glow ? "z-2 mb-[-24px] w-full" : ""} ${className ?? ""}`}
+      >
+        <span className="relative z-10 flex items-center gap-2">{children}</span>
+        <SpotlightOverlay x={pos.x} y={pos.y} visible={hovering} />
+      </a>
+      {glow && (
+        <div className="z-1 mx-6 h-6 w-full overflow-hidden rounded-[26px]">
+          <div className="h-full w-full bg-white opacity-60 shadow-[0_0_24px_0_#1cb982]" />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function CtaButtonLink({ children, href, className, glow }: CtaButtonLinkProps) {
   const { ref, pos, hovering, onMouseMove, setHovering } = useSpotlight();
 

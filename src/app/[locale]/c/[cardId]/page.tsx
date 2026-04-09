@@ -408,7 +408,7 @@ export default async function CardPage({ params, searchParams }: PageProps) {
 
           {/* Right column: sticky sidebar */}
           <aside>
-            <div className="sticky top-[24px]">
+            <div className="sticky top-[96px]">
               <ProfileSidebar card={card} translations={sidebarTranslations} />
             </div>
           </aside>

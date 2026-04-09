@@ -1,4 +1,27 @@
 {
+  "hub": {
+    "verifiedBadge": "Verified Networking Hub",
+    "about": "About",
+    "services": "Services",
+    "comments": "Comments",
+    "photos": "Photos",
+    "pricing": "Pricing",
+    "workingHours": "Working Hours",
+    "amenities": "Amenities",
+    "openNow": "Open Now",
+    "closedNow": "Closed",
+    "getDirections": "Get Directions",
+    "contact": "Contact",
+    "phone": "Phone",
+    "email": "E-Mail",
+    "website": "Website",
+    "address": "Address",
+    "noComments": "No comments yet.",
+    "downloadOnAppStore": "Download on the App Store",
+    "getItOnGooglePlay": "Get it on Google Play",
+    "getTheApp": "Get the Cardixx App",
+    "saveToWallet": "Save to Cardixx Wallet"
+  },
   "card": {
     "about": "About",
     "company": "Company",

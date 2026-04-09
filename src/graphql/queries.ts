@@ -1,3 +1,32 @@
+export const PUBLIC_HUB_QUERY = `
+  query PublicHub($id: String!) {
+    publicHub(id: $id) {
+      id
+      name
+      primaryType
+      description
+      images
+      address
+      country
+      city
+      state
+      addressLine2
+      zipCode
+      latitude
+      longitude
+      website
+      phone
+      socialLinks
+      amenities
+      businessHours
+      activeCheckInsCount
+      checkInsLast24Hours
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const PUBLIC_CARD_QUERY = `
   query PublicCard($id: String!, $source: String) {
     publicCard(id: $id, source: $source) {
