@@ -76,6 +76,8 @@ export type AnalyticsEventType =
   | 'EDIT_CARD_CLICKED'
   | 'EXCHANGE_DETECTED'
   | 'EXTERNAL_CARD_VIEWED'
+  | 'HUB_INTERACTION'
+  | 'HUB_VIEWED'
   | 'LOGIN'
   | 'MESSAGE_SENT'
   | 'NATIVE_SHARE_OPENED'
@@ -95,6 +97,12 @@ export type AnalyticsPeriod =
   | 'LAST_6_MONTHS'
   | 'THIS_MONTH'
   | 'THIS_WEEK';
+
+/** Source platform of the analytics event */
+export type AnalyticsSource =
+  | 'API'
+  | 'MOBILE'
+  | 'WEB';
 
 /** Summary analytics metrics with change percentages */
 export type AnalyticsSummary = {
@@ -566,6 +574,8 @@ export type CreateHubInput = {
   country?: InputMaybe<Scalars['String']['input']>;
   /** Hub description */
   description: Scalars['String']['input'];
+  /** Contact email address */
+  email?: InputMaybe<Scalars['String']['input']>;
   /** Google Places API ID for deduplication */
   googlePlaceId: Scalars['String']['input'];
   /** Photo URLs — index 0 = main photo */
@@ -576,8 +586,12 @@ export type CreateHubInput = {
   longitude: Scalars['Float']['input'];
   /** Name of the place */
   name: Scalars['String']['input'];
+  /** Organization ID that will own this hub */
+  organizationId: Scalars['String']['input'];
   /** Venue phone number */
   phone?: InputMaybe<Scalars['String']['input']>;
+  /** Google Places price level (0=Free, 1=Inexpensive, 2=Moderate, 3=Expensive, 4=Very Expensive) */
+  priceLevel?: InputMaybe<Scalars['Int']['input']>;
   /** Place type from Google Places API (e.g. "Business Cafe") */
   primaryType?: InputMaybe<Scalars['String']['input']>;
   /** Social media links as key-value pairs */
@@ -774,6 +788,8 @@ export type Hub = {
   description: Scalars['String']['output'];
   /** Distance from the search location in meters */
   distance?: Maybe<Scalars['Float']['output']>;
+  /** Contact email address */
+  email?: Maybe<Scalars['String']['output']>;
   /** Google Places API ID for deduplication */
   googlePlaceId: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -782,8 +798,12 @@ export type Hub = {
   latitude: Scalars['Float']['output'];
   longitude: Scalars['Float']['output'];
   name: Scalars['String']['output'];
+  /** Organization that owns this hub */
+  organizationId: Scalars['String']['output'];
   /** Venue phone number */
   phone?: Maybe<Scalars['String']['output']>;
+  /** Google Places price level (0=Free, 1=Inexpensive, 2=Moderate, 3=Expensive, 4=Very Expensive) */
+  priceLevel?: Maybe<Scalars['Int']['output']>;
   /** Place type from Google Places API (e.g. "Business Cafe") */
   primaryType?: Maybe<Scalars['String']['output']>;
   /** Social media links as key-value pairs */
@@ -917,6 +937,8 @@ export type Mutation = {
   adminLogin: AdminAuthResponse;
   /** Authenticate with Apple (native mobile flow) */
   appleAuth: AuthResponse;
+  /** Approve a hub application (admin only) */
+  approveHubApplication: HubApplication;
   /** Archive a chat room */
   archiveChat: ChatRoom;
   /** Complete user onboarding by updating profile and creating first card */
@@ -954,6 +976,8 @@ export type Mutation = {
   /** Mark all messages in a room as read */
   markRoomAsRead: Scalars['Boolean']['output'];
   registerDevice: Device;
+  /** Reject a hub application (admin only) */
+  rejectHubApplication: HubApplication;
   /** Remove a card from the current user wallet */
   removeFromWallet: Scalars['Boolean']['output'];
   /** Remove a tag from a wallet card */
@@ -1007,6 +1031,11 @@ export type MutationAdminLoginArgs = {
 
 export type MutationAppleAuthArgs = {
   input: AppleAuthInput;
+};
+
+
+export type MutationApproveHubApplicationArgs = {
+  applicationId: Scalars['String']['input'];
 };
 
 
@@ -1097,6 +1126,12 @@ export type MutationMarkRoomAsReadArgs = {
 
 export type MutationRegisterDeviceArgs = {
   input: RegisterDeviceInput;
+};
+
+
+export type MutationRejectHubApplicationArgs = {
+  applicationId: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
 };
 
 
@@ -1639,8 +1674,12 @@ export type TrackEventInput = {
   cardId?: InputMaybe<Scalars['String']['input']>;
   /** Card owner ID (for view/click events) */
   cardOwnerId?: InputMaybe<Scalars['String']['input']>;
+  /** Related hub ID */
+  hubId?: InputMaybe<Scalars['String']['input']>;
   /** Additional event properties */
   properties?: InputMaybe<Scalars['JSON']['input']>;
+  /** Source platform */
+  source?: InputMaybe<AnalyticsSource>;
   /** Type of event to track */
   type: AnalyticsEventType;
 };

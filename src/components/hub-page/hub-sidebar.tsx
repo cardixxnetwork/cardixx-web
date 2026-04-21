@@ -13,10 +13,12 @@ import {
   PLAY_STORE_URL,
   getDevicePlatform,
 } from "@/lib/store-links";
+import { trackHubInteraction } from "@/actions/track-hub-event";
 import { buildHubSocialLinks } from "@/utils/hub-social-links";
 import { isOpenNow } from "@/utils/business-hours";
 
 interface HubSidebarProps {
+  hubId: string;
   hub: {
     primaryType?: string | null;
     images: string[];
@@ -80,7 +82,7 @@ function ContactInfoRow({
   return content;
 }
 
-export function HubSidebar({ hub, translations: t }: HubSidebarProps) {
+export function HubSidebar({ hubId, hub, translations: t }: HubSidebarProps) {
   const [showStoreModal, setShowStoreModal] = useState(false);
 
   const socialLinks = buildHubSocialLinks(hub.socialLinks);
@@ -89,6 +91,7 @@ export function HubSidebar({ hub, translations: t }: HubSidebarProps) {
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${hub.latitude},${hub.longitude}`;
 
   const handleContactClick = useCallback(() => {
+    trackHubInteraction(hubId, "contact_call");
     if (hub.phone) {
       window.location.href = `tel:${hub.phone}`;
     } else {
@@ -101,7 +104,11 @@ export function HubSidebar({ hub, translations: t }: HubSidebarProps) {
         setShowStoreModal(true);
       }
     }
-  }, [hub.phone]);
+  }, [hub.phone, hubId]);
+
+  const handleDirectionsClick = useCallback(() => {
+    trackHubInteraction(hubId, "get_directions");
+  }, [hubId]);
 
   return (
     <>
@@ -205,10 +212,12 @@ export function HubSidebar({ hub, translations: t }: HubSidebarProps) {
 
         {/* CTA Buttons */}
         <div className="flex flex-col gap-4">
-          <CtaButtonExternalLink href={directionsUrl} glow>
-            {t.getDirections}
-            <ArrowUpRight className="h-5 w-5" />
-          </CtaButtonExternalLink>
+          <div onClickCapture={handleDirectionsClick}>
+            <CtaButtonExternalLink href={directionsUrl} glow>
+              {t.getDirections}
+              <ArrowUpRight className="h-5 w-5" />
+            </CtaButtonExternalLink>
+          </div>
           <CtaOutlineButton
             onClick={handleContactClick}
             className="w-full"
