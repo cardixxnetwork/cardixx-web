@@ -58,7 +58,9 @@ function SpotlightOverlay({ x, y, visible, variant = "filled" }: { x: number; y:
   );
 }
 
-export function CtaButton({ children, onClick, className, glow }: CtaButtonProps) {
+export function CtaButton(props: CtaButtonProps) {
+  const { children, onClick, className, glow } = props;
+
   const { ref, pos, hovering, onMouseMove, setHovering } = useSpotlight();
 
   return (
@@ -85,7 +87,9 @@ export function CtaButton({ children, onClick, className, glow }: CtaButtonProps
   );
 }
 
-export function CtaOutlineButton({ children, onClick, className }: Omit<CtaButtonProps, "glow">) {
+export function CtaOutlineButton(props: Omit<CtaButtonProps, "glow">) {
+  const { children, onClick, className } = props;
+
   const { ref, pos, hovering, onMouseMove, setHovering } = useSpotlight();
 
   return (
@@ -104,7 +108,9 @@ export function CtaOutlineButton({ children, onClick, className }: Omit<CtaButto
   );
 }
 
-export function CtaOutlineButtonLink({ children, href, className }: Omit<CtaButtonLinkProps, "glow">) {
+export function CtaOutlineButtonLink(props: Omit<CtaButtonLinkProps, "glow">) {
+  const { children, href, className } = props;
+
   const { ref, pos, hovering, onMouseMove, setHovering } = useSpotlight();
 
   return (
@@ -122,7 +128,9 @@ export function CtaOutlineButtonLink({ children, href, className }: Omit<CtaButt
   );
 }
 
-export function CtaButtonExternalLink({ children, href, className, glow }: CtaButtonLinkProps) {
+export function CtaButtonExternalLink(props: CtaButtonLinkProps) {
+  const { children, href, className, glow } = props;
+
   const { ref, pos, hovering, onMouseMove, setHovering } = useSpotlight();
 
   return (
@@ -150,7 +158,9 @@ export function CtaButtonExternalLink({ children, href, className, glow }: CtaBu
   );
 }
 
-export function CtaButtonLink({ children, href, className, glow }: CtaButtonLinkProps) {
+export function CtaButtonLink(props: CtaButtonLinkProps) {
+  const { children, href, className, glow } = props;
+
   const { ref, pos, hovering, onMouseMove, setHovering } = useSpotlight();
 
   return (

@@ -183,7 +183,7 @@ export default async function HubPage({ params }: PageProps) {
 
           {/* Mobile sidebar info */}
           <div className="flex flex-col gap-6">
-            <HubSidebar hub={hub} translations={sidebarTranslations} />
+            <HubSidebar hubId={hubId} hub={hub} translations={sidebarTranslations} />
           </div>
 
           <hr className="my-8 border-[#EDEEED]" />
@@ -231,7 +231,7 @@ export default async function HubPage({ params }: PageProps) {
           {/* Right column: sticky sidebar */}
           <aside>
             <div className="sticky top-[96px]">
-              <HubSidebar hub={hub} translations={sidebarTranslations} />
+              <HubSidebar hubId={hubId} hub={hub} translations={sidebarTranslations} />
             </div>
           </aside>
         </div>
