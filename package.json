@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "preinstall": "sh -c 'echo \"[preinstall] PAT length: ${#CARD_SCHEMA_READ_PAT}\"; if [ -n \"$CARD_SCHEMA_READ_PAT\" ]; then git config --global --add url.\"https://x-access-token:$CARD_SCHEMA_READ_PAT@github.com/\".insteadOf \"https://github.com/\"; git config --global --add url.\"https://x-access-token:$CARD_SCHEMA_READ_PAT@github.com/\".insteadOf \"ssh://git@github.com/\"; git config --global --add url.\"https://x-access-token:$CARD_SCHEMA_READ_PAT@github.com/\".insteadOf \"git@github.com:\"; else echo \"[preinstall] WARNING: CARD_SCHEMA_READ_PAT is not set — private @cardixx/card-schema dep will fail to install. Set it as an env var with a GitHub PAT (Contents: read).\"; fi'",
     "dev": "next dev --port 4177",
     "translate": "tsx scripts/translate-ui.ts",
     "prebuild": "npm run translate",
@@ -11,6 +12,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@cardixx/card-schema": "git+https://github.com/cardixxnetwork/cardixx-card-schema.git#v1.4.0",
     "@payloadcms/db-postgres": "^3.81.0",
     "@payloadcms/next": "^3.81.0",
     "@payloadcms/richtext-lexical": "^3.81.0",

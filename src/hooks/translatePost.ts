@@ -61,7 +61,6 @@ Return ONLY the JSON object, no markdown fences or extra text.`;
 export const translatePostAfterChange: CollectionAfterChangeHook = async ({
   doc,
   req,
-  operation,
   context,
 }) => {
   // Prevent infinite recursion — translation updates trigger afterChange again

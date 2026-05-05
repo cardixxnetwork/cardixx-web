@@ -1,3 +1,17 @@
+/**
+ * Public GraphQL queries used by SSR card / hub pages.
+ *
+ * `PUBLIC_CARD_QUERY` is composed from `@cardixx/card-schema` — every registry
+ * entry with `publicExposable: true` is emitted, plus the fixed infrastructure
+ * columns (id, timestamps, image urls, theme block) that never belong in the
+ * registry. This guarantees the public query stays in sync with the registry:
+ * flagging a new field as `publicExposable` exposes it here automatically, and
+ * conversely un-flagging a field removes it from the public surface without a
+ * separate edit.
+ */
+
+import { FIELD_REGISTRY } from "@cardixx/card-schema";
+
 export const PUBLIC_HUB_QUERY = `
   query PublicHub($id: String!) {
     publicHub(id: $id) {
@@ -27,71 +41,20 @@ export const PUBLIC_HUB_QUERY = `
   }
 `;
 
+const PUBLIC_CARD_FIELDS = FIELD_REGISTRY.filter((f) => f.publicExposable)
+  .map((f) => f.name)
+  .join("\n      ");
+
 export const PUBLIC_CARD_QUERY = `
   query PublicCard($id: String!, $source: String) {
     publicCard(id: $id, source: $source) {
       id
       userId
-      firstName
-      lastName
-      jobTitle
-      profilePhoto
-      companyName
-      companyEmail
-      companyPhone
-      companyWebsite
-      companyAddress
-      companyLogo
-      about
-      industry
-      specialties
-      location
-      companySize
+      ${PUBLIC_CARD_FIELDS}
       templateId
       themeId
       name
       isPrivate
-      middleName
-      prefix
-      suffix
-      preferredName
-      pronouns
-      maidenName
-      bio
-      department
-      headline
-      skills
-      personalWebsite
-      discord
-      wechat
-      line
-      signal
-      linkedin
-      instagram
-      x
-      facebook
-      tiktok
-      youtube
-      github
-      dribbble
-      behance
-      snapchat
-      pinterest
-      whatsapp
-      telegram
-      threads
-      patreon
-      spotify
-      soundcloud
-      appleMusic
-      teams
-      meet
-      zoom
-      webex
-      calendly
-      bookings
-      videoLink
-      fileUpload
       displaySettings
       customStyles
       frontImageUrl

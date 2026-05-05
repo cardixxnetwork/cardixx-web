@@ -5,8 +5,17 @@
  * (fullName, logoInitials, qrCodeUrl, socialLinks HTML) for template rendering.
  */
 
-import { getSocialIconSvg, SOCIAL_LINK_FIELDS } from "./social-icons";
+import {
+  directCopyFields,
+  getSocialIconSvg,
+  jsonFields,
+  SOCIAL_LINK_ORDER as SOCIAL_LINK_FIELDS,
+} from "@cardixx/card-schema";
+
 import { generateCardQrCodeUrl } from "./qr-code";
+
+/** Registry-sourced card content field names (direct columns + JSON columns). */
+const FIELD_KEYS = [...directCopyFields(), ...jsonFields()] as readonly string[];
 
 // ── Types ──
 
@@ -170,67 +179,6 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
-
-// ── Card field keys (matching schema) ──
-
-const FIELD_KEYS = [
-  "firstName",
-  "lastName",
-  "middleName",
-  "prefix",
-  "suffix",
-  "preferredName",
-  "pronouns",
-  "maidenName",
-  "profilePhoto",
-  "bio",
-  "jobTitle",
-  "department",
-  "headline",
-  "skills",
-  "personalWebsite",
-  "companyName",
-  "companyEmail",
-  "companyPhone",
-  "companyWebsite",
-  "companyAddress",
-  "companyLogo",
-  "about",
-  "industry",
-  "specialties",
-  "location",
-  "companySize",
-  "discord",
-  "wechat",
-  "line",
-  "signal",
-  "linkedin",
-  "instagram",
-  "x",
-  "facebook",
-  "tiktok",
-  "youtube",
-  "github",
-  "dribbble",
-  "behance",
-  "snapchat",
-  "pinterest",
-  "whatsapp",
-  "telegram",
-  "threads",
-  "patreon",
-  "spotify",
-  "soundcloud",
-  "appleMusic",
-  "teams",
-  "meet",
-  "zoom",
-  "webex",
-  "calendly",
-  "bookings",
-  "videoLink",
-  "fileUpload",
-] as const;
 
 // ── Main export ──
 

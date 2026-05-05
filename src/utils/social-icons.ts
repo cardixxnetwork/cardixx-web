@@ -1,38 +1,10 @@
 /**
- * Social icon registry for theme preview rendering.
- * Maps schema field names to SVG content (with currentColor for theme-aware styling).
+ * Thin re-export of the canonical social-icon registry from
+ * `@cardixx/card-schema`. Kept for the existing `@/utils/social-icons` import
+ * path; prefer importing directly from the package in new code.
  */
 
-import { SOCIAL_ICON_SVGS } from './social-icons.generated';
-
-/** Ordered list of social link fields matching schema (for consistent rendering order) */
-export const SOCIAL_LINK_FIELDS: readonly string[] = [
-  'linkedin',
-  'instagram',
-  'x',
-  'facebook',
-  'tiktok',
-  'youtube',
-  'github',
-  'dribbble',
-  'behance',
-  'snapchat',
-  'pinterest',
-  'threads',
-  'patreon',
-  'spotify',
-  'soundcloud',
-  'appleMusic',
-] as const;
-
-/**
- * Get SVG content for a social link field.
- * Returns SVG string with fill="currentColor" for theme-aware styling.
- */
-export function getSocialIconSvg(fieldName: string): string {
-  const svg = SOCIAL_ICON_SVGS[fieldName];
-  if (!svg) {
-    return '';
-  }
-  return svg;
-}
+export {
+  SOCIAL_LINK_ORDER as SOCIAL_LINK_FIELDS,
+  getSocialIconSvg,
+} from "@cardixx/card-schema";
