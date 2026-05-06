@@ -1,4 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "sh -c 'if [ -z \"$CARD_SCHEMA_READ_PAT\" ]; then echo \"ERROR: CARD_SCHEMA_READ_PAT is not set\"; exit 1; fi; AUTHED=\"https://x-access-token:$CARD_SCHEMA_READ_PAT@github.com/\"; git config --global --add url.\"$AUTHED\".insteadOf \"https://github.com/\"; git config --global --add url.\"$AUTHED\".insteadOf \"git@github.com:\"; git config --global --add url.\"$AUTHED\".insteadOf \"ssh://git@github.com/\"; git config --global --add url.\"$AUTHED\".insteadOf \"git+ssh://git@github.com/\"; git config --global --add url.\"$AUTHED\".insteadOf \"git+https://github.com/\"' && npm ci"
-}
