@@ -1,14 +1,23 @@
 /**
  * Template data builder — ported from cardixx-mobile utils/theme-engine.ts
  *
- * Merges card data with theme display settings, style schema, and computed fields
- * (fullName, logoInitials, qrCodeUrl, socialLinks HTML) for template rendering.
+ * Merges card data with theme display settings, style schema, and computed
+ * fields (fullName, logoInitials, qrCodeUrl, socialLinks HTML) for template
+ * rendering. Per-side visibility and the social-link cap come from the shared
+ * `@cardixx/card-schema` package so every consumer behaves identically.
  */
 
 import {
+  type CardSide,
+  type DisplaySettings,
   directCopyFields,
+  type FieldDisplaySetting,
+  getCardBackgroundDataUri,
+  getCardLogoInitials,
   getSocialIconSvg,
+  isFieldVisibleOnSide as schemaIsFieldVisibleOnSide,
   jsonFields,
+  MAX_SOCIAL_LINKS_DISPLAYED,
   SOCIAL_LINK_ORDER as SOCIAL_LINK_FIELDS,
 } from "@cardixx/card-schema";
 
@@ -37,12 +46,9 @@ export type StyleDefinition = {
 
 export type StyleSchema = Record<string, StyleDefinition>;
 
-export type FieldDisplaySetting = {
-  display: boolean;
-  required: boolean;
-};
-
-export type DisplaySettings = Record<string, FieldDisplaySetting>;
+// Re-export the shared types so consumers in cardixx-web can keep importing
+// from this file without reaching into the schema package directly.
+export type { DisplaySettings, FieldDisplaySetting };
 
 export type CardData = Record<string, unknown> & {
   id?: string;
@@ -50,6 +56,8 @@ export type CardData = Record<string, unknown> & {
   lastName?: string | null;
   middleName?: string | null;
   companyName?: string | null;
+  companyLogo?: string | null;
+  companyLogoBack?: string | null;
   customStyles?: unknown;
   displaySettings?: DisplaySettings;
 };
@@ -76,6 +84,13 @@ function detectFieldSide(
   backHtml: string | null | undefined,
   fieldName: string
 ): "back" | "both" | "front" | "none" {
+  // `companyLogoBack` is a virtual back-side companion of `companyLogo` —
+  // surface it as a back-only field wherever `companyLogo` appears on back.
+  if (fieldName === "companyLogoBack") {
+    const logoSide = detectFieldSide(frontHtml, backHtml, "companyLogo");
+    return logoSide === "back" || logoSide === "both" ? "back" : "none";
+  }
+
   const patterns = [
     `{{${fieldName}}}`,
     `{{{${fieldName}}}}`,
@@ -113,20 +128,19 @@ function detectFieldSide(
 
 function isFieldVisibleOnSide(
   fieldName: string,
-  side: "back" | "front",
+  side: CardSide,
   displaySettings: DisplaySettings,
   frontHtml: string | null | undefined,
   backHtml: string | null | undefined
 ): boolean {
   const detectedSide = detectFieldSide(frontHtml, backHtml, fieldName);
   const sideMatches = detectedSide === side || detectedSide === "both";
-  const fieldSetting = displaySettings[fieldName];
-  if (!fieldSetting) return sideMatches;
-  return sideMatches && fieldSetting.display;
+  if (!sideMatches) return false;
+  return schemaIsFieldVisibleOnSide(displaySettings[fieldName], side);
 }
 
 function getSideSettings(
-  side: "back" | "front",
+  side: CardSide,
   displaySettings: DisplaySettings,
   frontHtml: string | null | undefined,
   backHtml: string | null | undefined
@@ -135,7 +149,8 @@ function getSideSettings(
   for (const [fieldName, fieldSetting] of Object.entries(displaySettings)) {
     const detectedSide = detectFieldSide(frontHtml, backHtml, fieldName);
     const sideMatches = detectedSide === side || detectedSide === "both";
-    settings[fieldName] = sideMatches && fieldSetting.display;
+    settings[fieldName] =
+      sideMatches && schemaIsFieldVisibleOnSide(fieldSetting, side);
   }
   return settings;
 }
@@ -151,12 +166,13 @@ function getDefaultStyles(
 }
 
 function getLogoInitials(card: CardData): string {
-  if (card.companyName) {
-    return card.companyName.substring(0, 2).toLowerCase();
-  }
-  const firstName = (card.firstName as string) || "";
-  const lastName = (card.lastName as string) || "";
-  return (firstName.charAt(0) + lastName.charAt(0)).toLowerCase();
+  // Delegates to the shared `getCardLogoInitials` helper so every consumer
+  // (web, mobile, themes, core) produces identical output.
+  return getCardLogoInitials({
+    companyName: card.companyName ?? null,
+    firstName: card.firstName ?? null,
+    lastName: card.lastName ?? null,
+  });
 }
 
 function getFullName(
@@ -180,6 +196,33 @@ function escapeHtml(text: string): string {
     .replace(/'/g, "&#39;");
 }
 
+/**
+ * Compute the per-side CSS `background` declaration from a card's
+ * customStyles. Mirrors cardixx-mobile/utils/theme-engine.computeBackgroundCss
+ * and cardixx-core/.../card-background.computeBackgroundCss.
+ */
+export function computeBackgroundCss(
+  customStyles: Record<string, unknown>,
+  side: CardSide
+): string {
+  const sideTag = side === "front" ? "Front" : "Back";
+  const type = (customStyles[`bg${sideTag}Type`] as string) || "color";
+  if (type === "gradient") {
+    const from = (customStyles[`bg${sideTag}GradFrom`] as string) || "#FFFFFF";
+    const to = (customStyles[`bg${sideTag}GradTo`] as string) || "#EDE8E4";
+    const angleRaw = customStyles[`bg${sideTag}GradAngle`];
+    const angle = typeof angleRaw === "number" ? angleRaw : 135;
+    return `background: linear-gradient(${angle}deg, ${from}, ${to});`;
+  }
+  if (type === "image") {
+    const filename = (customStyles[`bg${sideTag}Image`] as string) || "";
+    const uri = getCardBackgroundDataUri(filename);
+    if (uri) return `background: url('${uri}') center/cover no-repeat;`;
+  }
+  const color = (customStyles[`bg${sideTag}Color`] as string) || "#FFFFFF";
+  return `background: ${color};`;
+}
+
 // ── Main export ──
 
 /**
@@ -188,7 +231,7 @@ function escapeHtml(text: string): string {
 export function prepareTemplateData(
   card: CardData,
   theme: ThemeData,
-  side: "back" | "front"
+  side: CardSide
 ): Record<string, unknown> {
   const styleSchema = (theme.styleSchema || {}) as StyleSchema;
   const customStyles = (card.customStyles || {}) as Record<
@@ -215,25 +258,22 @@ export function prepareTemplateData(
     ...getDefaultStyles(styleSchema),
     ...customStyles,
   };
+  // Per-side background CSS (color / gradient / image data URI).
+  styles.backgroundCss = computeBackgroundCss(customStyles, side);
 
   const qrCodeColor = styles.qrCodeColor as string | undefined;
-  const qrVisible = isFieldVisibleOnSide(
-    "qrCodeUrl",
-    side,
-    mergedDisplaySettings,
-    theme.frontHtml,
-    theme.backHtml
+  const qrVisible = schemaIsFieldVisibleOnSide(
+    mergedDisplaySettings.qrCodeUrl,
+    side
   );
 
   const data: Record<string, unknown> = {
     fullName: getFullName(card, sideSettings),
-    logoInitials: getLogoInitials(card),
-    qrCodeUrl:
-      qrVisible && card.id
-        ? generateCardQrCodeUrl(card.id, 4, qrCodeColor)
-        : "",
     styles,
   };
+  if (qrVisible && card.id) {
+    data.qrCodeUrl = generateCardQrCodeUrl(card.id, 4, qrCodeColor);
+  }
 
   // Add each card field if it has value AND display is enabled for this side
   for (const fieldName of FIELD_KEYS) {
@@ -250,22 +290,67 @@ export function prepareTemplateData(
     }
   }
 
-  // Build socialLinks HTML
+  // Logo / initials resolution chain — mirrors cardixx-core/mobile:
+  //   front: companyLogo  → initials  → nothing
+  //   back:  companyLogoBack → companyLogo → initials → nothing
+  const logoVisible = schemaIsFieldVisibleOnSide(
+    mergedDisplaySettings.companyLogo,
+    side
+  );
+  const logoBackVisible = schemaIsFieldVisibleOnSide(
+    mergedDisplaySettings.companyLogoBack,
+    side
+  );
+  let resolvedLogoUrl: string | null = null;
+  if (side === "front" && logoVisible && card.companyLogo) {
+    resolvedLogoUrl = card.companyLogo;
+  } else if (side === "back") {
+    if (logoBackVisible && card.companyLogoBack) {
+      resolvedLogoUrl = card.companyLogoBack;
+    } else if (logoVisible && card.companyLogo) {
+      resolvedLogoUrl = card.companyLogo;
+    }
+  }
+  if (resolvedLogoUrl) {
+    data.companyLogo = resolvedLogoUrl;
+  } else {
+    delete data.companyLogo;
+    delete data.companyLogoBack;
+  }
+
+  const initialsVisible = schemaIsFieldVisibleOnSide(
+    mergedDisplaySettings.logoInitials,
+    side
+  );
+  if (!resolvedLogoUrl && initialsVisible) {
+    const initials = getLogoInitials(card);
+    if (initials) data.logoInitials = initials;
+  }
+
+  // Build socialLinks HTML — gated by parent `socialLinks` master switch AND
+  // per-side per-field flags. Capped at MAX_SOCIAL_LINKS_DISPLAYED.
   const socialLinksHtml: string[] = [];
-  for (const fieldName of SOCIAL_LINK_FIELDS) {
-    const value = card[fieldName];
-    const isVisible = isFieldVisibleOnSide(
-      fieldName,
-      side,
-      mergedDisplaySettings,
-      theme.frontHtml,
-      theme.backHtml
-    );
-    if (value && isVisible) {
-      const svg = getSocialIconSvg(fieldName);
-      socialLinksHtml.push(
-        `<div class="link-row"><span class="link-icon">${svg}</span><span>${escapeHtml(String(value))}</span></div>`
+  const linksGroupOn = schemaIsFieldVisibleOnSide(
+    mergedDisplaySettings.socialLinks,
+    side
+  );
+  if (linksGroupOn) {
+    for (const fieldName of SOCIAL_LINK_FIELDS) {
+      if (socialLinksHtml.length >= MAX_SOCIAL_LINKS_DISPLAYED) break;
+      const value = card[fieldName];
+      const isVisible = isFieldVisibleOnSide(
+        fieldName,
+        side,
+        mergedDisplaySettings,
+        theme.frontHtml,
+        theme.backHtml
       );
+      if (value && isVisible) {
+        const svg = getSocialIconSvg(fieldName);
+        socialLinksHtml.push(
+          `<div class="link-row"><span class="link-icon">${svg}</span><span>${escapeHtml(String(value))}</span></div>`
+        );
+      }
     }
   }
   data.socialLinks = socialLinksHtml.join("");

@@ -8,7 +8,7 @@ import type { CardFullFragment } from "@/graphql/generated/graphql";
 import { locales, defaultLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { renderTemplate } from "@/lib/template-engine";
-import { prepareTemplateData } from "@/lib/template-data";
+import { computeBackgroundCss, prepareTemplateData } from "@/lib/template-data";
 import { prepareEmbedHtml } from "@/lib/card-fonts";
 import { buildSocialLinks } from "@/utils/social-platforms";
 import { CardHero } from "@/components/card-page/card-hero";
@@ -174,15 +174,21 @@ export default async function CardPage({ params, searchParams }: PageProps) {
       defaultDisplaySettings: card.theme.defaultDisplaySettings,
     };
 
+    const customStylesRecord = (cardData.customStyles ?? {}) as Record<
+      string,
+      unknown
+    >;
     const frontData = prepareTemplateData(cardData, themeData, "front");
     frontRenderedHtml = prepareEmbedHtml(
-      renderTemplate(card.theme.frontHtml, frontData)
+      renderTemplate(card.theme.frontHtml, frontData),
+      computeBackgroundCss(customStylesRecord, "front")
     );
 
     if (card.theme.backHtml) {
       const backData = prepareTemplateData(cardData, themeData, "back");
       backRenderedHtml = prepareEmbedHtml(
-        renderTemplate(card.theme.backHtml, backData)
+        renderTemplate(card.theme.backHtml, backData),
+        computeBackgroundCss(customStylesRecord, "back")
       );
     }
   }

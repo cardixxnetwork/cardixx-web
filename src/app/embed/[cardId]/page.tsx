@@ -4,7 +4,7 @@ import { graphqlFetch } from "@/lib/graphql-client";
 import { PUBLIC_CARD_QUERY } from "@/graphql/queries";
 import type { CardFullFragment } from "@/graphql/generated/graphql";
 import { renderTemplate } from "@/lib/template-engine";
-import { prepareTemplateData } from "@/lib/template-data";
+import { computeBackgroundCss, prepareTemplateData } from "@/lib/template-data";
 import { prepareEmbedHtml, ORIGINAL_CARD_WIDTH } from "@/lib/card-fonts";
 import { FlipCard } from "@/components/embed/flip-card";
 
@@ -91,16 +91,26 @@ export default async function EmbedPage({
   };
 
   // Render front face
+  const customStylesRecord = (cardData.customStyles ?? {}) as Record<
+    string,
+    unknown
+  >;
   const frontData = prepareTemplateData(cardData, themeData, "front");
   let frontRenderedHtml = renderTemplate(theme.frontHtml, frontData);
-  frontRenderedHtml = prepareEmbedHtml(frontRenderedHtml);
+  frontRenderedHtml = prepareEmbedHtml(
+    frontRenderedHtml,
+    computeBackgroundCss(customStylesRecord, "front")
+  );
 
   // Render back face (fallback to empty if no backHtml)
   let backRenderedHtml = "";
   if (theme.backHtml) {
     const backData = prepareTemplateData(cardData, themeData, "back");
     backRenderedHtml = renderTemplate(theme.backHtml, backData);
-    backRenderedHtml = prepareEmbedHtml(backRenderedHtml);
+    backRenderedHtml = prepareEmbedHtml(
+      backRenderedHtml,
+      computeBackgroundCss(customStylesRecord, "back")
+    );
   }
 
   const scale = Math.min(
