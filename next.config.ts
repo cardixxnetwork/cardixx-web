@@ -25,7 +25,13 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
-    return [
+    // Block search engine indexing on non-production environments (dev.cardixx.com,
+    // stag.cardixx.com). APP_ENV is set per deployment; ANY value other than the
+    // literal "production" — including missing/typo — is treated as non-prod so a
+    // misconfigured deploy fails closed (no accidental indexing).
+    const isProd = process.env.APP_ENV === "production";
+
+    const headers = [
       {
         source: "/embed/:path*",
         headers: [
@@ -43,6 +49,35 @@ const nextConfig: NextConfig = {
             value: "camera=(), microphone=(), geolocation=()",
           },
         ],
+      },
+    ];
+
+    if (!isProd) {
+      headers.push({
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet, noimageindex",
+          },
+        ],
+      });
+    }
+
+    return headers;
+  },
+  async rewrites() {
+    // Apple/Google look up these well-known paths at the apex domain.
+    // We rewrite to API routes so we can serve them with the correct
+    // Content-Type and dynamic env-specific app IDs.
+    return [
+      {
+        source: "/.well-known/apple-app-site-association",
+        destination: "/api/aasa",
+      },
+      {
+        source: "/.well-known/assetlinks.json",
+        destination: "/api/assetlinks",
       },
     ];
   },
