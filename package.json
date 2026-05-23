@@ -8,7 +8,8 @@
     "prebuild": "npm run translate",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "codegen": "graphql-codegen"
   },
   "dependencies": {
     "@cardixx/card-schema": "npm:@cardixxnetwork/card-schema@1.5.1",

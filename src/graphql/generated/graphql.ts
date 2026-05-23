@@ -133,6 +133,13 @@ export type AnalyticsSummary = {
   uniqueViewersChange: Scalars['Float']['output'];
 };
 
+export type AppConfig = {
+  __typename?: 'AppConfig';
+  androidStoreUrl?: Maybe<Scalars['String']['output']>;
+  iosStoreUrl?: Maybe<Scalars['String']['output']>;
+  minVersion?: Maybe<Scalars['String']['output']>;
+};
+
 export type AppleAuthInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
@@ -162,6 +169,7 @@ export type Card = {
   companyAddress?: Maybe<Scalars['String']['output']>;
   companyEmail?: Maybe<Scalars['String']['output']>;
   companyLogo?: Maybe<Scalars['String']['output']>;
+  companyLogoBack?: Maybe<Scalars['String']['output']>;
   companyName?: Maybe<Scalars['String']['output']>;
   companyPhone?: Maybe<Scalars['String']['output']>;
   companySize?: Maybe<Scalars['String']['output']>;
@@ -271,6 +279,7 @@ export type CardTemplate = {
   companyAddress?: Maybe<Scalars['String']['output']>;
   companyEmail?: Maybe<Scalars['String']['output']>;
   companyLogo?: Maybe<Scalars['String']['output']>;
+  companyLogoBack?: Maybe<Scalars['String']['output']>;
   companyName?: Maybe<Scalars['String']['output']>;
   companyPhone?: Maybe<Scalars['String']['output']>;
   companyWebsite?: Maybe<Scalars['String']['output']>;
@@ -311,7 +320,6 @@ export type CardTheme = {
   /** Style schema defining customizable design options */
   styleSchema: Scalars['JSON']['output'];
   updatedAt: Scalars['DateTime']['output'];
-  version: Scalars['String']['output'];
 };
 
 export type ChatRoom = {
@@ -327,11 +335,14 @@ export type ChatRoom = {
 
 export type ChatRoomMember = {
   __typename?: 'ChatRoomMember';
+  card?: Maybe<Card>;
+  cardId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   isMuted: Scalars['Boolean']['output'];
   lastReadAt?: Maybe<Scalars['DateTime']['output']>;
   roomId: Scalars['String']['output'];
+  user?: Maybe<User>;
   userId: Scalars['String']['output'];
 };
 
@@ -342,12 +353,16 @@ export type ChatRoomType =
 
 export type CheckIn = {
   __typename?: 'CheckIn';
+  /** Address for this check-in */
+  address: Scalars['String']['output'];
   /** Optional bio for this check-in */
   bio?: Maybe<Scalars['String']['output']>;
   card: Card;
   /** Card/profile used for this check-in */
   cardId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  /** Mutual visibility radius in km */
+  discoveryRadiusKm?: Maybe<Scalars['Float']['output']>;
   /** Duration in minutes */
   duration: Scalars['Int']['output'];
   /** When the check-in expires */
@@ -383,8 +398,8 @@ export type CheckedInUser = {
 
 export type CompanyDetailsInput = {
   companyAddress?: InputMaybe<Scalars['String']['input']>;
-  /** Company logo to upload (optional) */
-  companyLogoUpload?: InputMaybe<ImageUploadInput>;
+  /** Final GCS URL of the company logo (from prepareUpload) or null */
+  companyLogoUrl?: InputMaybe<Scalars['String']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
   companyPhone?: InputMaybe<Scalars['String']['input']>;
   companyWebsite?: InputMaybe<Scalars['String']['input']>;
@@ -454,6 +469,7 @@ export type CreateCardInput = {
   companyAddress?: InputMaybe<Scalars['String']['input']>;
   companyEmail?: InputMaybe<Scalars['String']['input']>;
   companyLogo?: InputMaybe<Scalars['String']['input']>;
+  companyLogoBack?: InputMaybe<Scalars['String']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
   companyPhone?: InputMaybe<Scalars['String']['input']>;
   companySize?: InputMaybe<Scalars['String']['input']>;
@@ -528,6 +544,8 @@ export type CreateCheckInInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   /** ID of the card/profile to use for networking */
   cardId: Scalars['String']['input'];
+  /** Mutual visibility radius in km. Other users farther than this from the check-in will not see it. */
+  discoveryRadiusKm?: InputMaybe<Scalars['Float']['input']>;
   /** Duration in minutes (e.g., 30, 60, 120, 240) */
   duration: Scalars['Int']['input'];
   /** ID of the hub to check into (optional - can check-in at custom location instead) */
@@ -628,7 +646,14 @@ export type CreateThemeInput = {
   name: Scalars['String']['input'];
   /** Style schema defining customizable design options */
   styleSchema: Scalars['JSON']['input'];
-  version?: Scalars['String']['input'];
+};
+
+/** Daily check-in count */
+export type DailyCheckIn = {
+  __typename?: 'DailyCheckIn';
+  count: Scalars['Int']['output'];
+  /** Date label, e.g. "Mon" or "Mar 01" */
+  date: Scalars['String']['output'];
 };
 
 export type Department = {
@@ -690,6 +715,7 @@ export type ErrorCode =
   | 'COMPANY_CARD_READONLY'
   | 'CONFIG_MISSING'
   | 'CONFLICT'
+  | 'CONTACT_ALREADY_CONNECTED'
   | 'CONTACT_REQUEST_ALREADY_RESPONDED'
   | 'CONTACT_REQUEST_ALREADY_SENT'
   | 'CONTACT_REQUEST_NOT_FOUND'
@@ -763,6 +789,21 @@ export type GoogleAuthInput = {
   lastName?: InputMaybe<Scalars['String']['input']>;
   picture?: InputMaybe<Scalars['String']['input']>;
   providerId: Scalars['String']['input'];
+};
+
+export type HealthStatus = {
+  __typename?: 'HealthStatus';
+  status: Scalars['String']['output'];
+  timestamp: Scalars['String']['output'];
+  uptime: Scalars['Float']['output'];
+};
+
+/** Hourly check-in distribution bucket */
+export type HourlyDistribution = {
+  __typename?: 'HourlyDistribution';
+  count: Scalars['Int']['output'];
+  /** Hour of day (0-23) */
+  hour: Scalars['Int']['output'];
 };
 
 export type Hub = {
@@ -850,13 +891,46 @@ export type HubApplicationStatus =
   | 'PENDING'
   | 'REJECTED';
 
-export type ImageUploadInput = {
-  /** Base64 encoded image data */
-  base64: Scalars['String']['input'];
-  /** File name with extension */
-  filename: Scalars['String']['input'];
-  /** MIME type (e.g., image/jpeg) */
-  mimeType: Scalars['String']['input'];
+/** Interaction type breakdown */
+export type HubInteractionBreakdown = {
+  __typename?: 'HubInteractionBreakdown';
+  count: Scalars['Int']['output'];
+  /** Interaction type, e.g. "get_directions" */
+  type: Scalars['String']['output'];
+};
+
+/** Hub networking & engagement metrics */
+export type HubNetworkingMetrics = {
+  __typename?: 'HubNetworkingMetrics';
+  cardsExchanged: Scalars['Int']['output'];
+  cardsExchangedChange: Scalars['Float']['output'];
+  profilesViewed: Scalars['Int']['output'];
+  profilesViewedChange: Scalars['Float']['output'];
+};
+
+/** Hub traffic summary metrics (App tab) */
+export type HubTrafficSummary = {
+  __typename?: 'HubTrafficSummary';
+  /** Formatted duration, e.g. "2.5h" */
+  avgStayDuration: Scalars['String']['output'];
+  avgStayDurationChange: Scalars['Float']['output'];
+  returningVisitors: Scalars['Int']['output'];
+  returningVisitorsChange: Scalars['Float']['output'];
+  totalAppVisitors: Scalars['Int']['output'];
+  totalAppVisitorsChange: Scalars['Float']['output'];
+  weeklyCheckIns: Scalars['Int']['output'];
+  weeklyCheckInsChange: Scalars['Float']['output'];
+};
+
+/** Hub web analytics summary (Web tab) */
+export type HubWebSummary = {
+  __typename?: 'HubWebSummary';
+  totalClicks: Scalars['Int']['output'];
+  totalClicksChange: Scalars['Float']['output'];
+  totalPageViews: Scalars['Int']['output'];
+  totalPageViewsChange: Scalars['Float']['output'];
+  uniqueVisitors: Scalars['Int']['output'];
+  uniqueVisitorsChange: Scalars['Float']['output'];
 };
 
 /** Industry distribution of viewers */
@@ -866,6 +940,20 @@ export type IndustryDistribution = {
   industry: Scalars['String']['output'];
   /** Percentage of viewers in this industry */
   percentage: Scalars['Float']['output'];
+};
+
+/** Job title distribution entry */
+export type JobTitleDistribution = {
+  __typename?: 'JobTitleDistribution';
+  jobTitle: Scalars['String']['output'];
+  /** Percentage of total */
+  percentage: Scalars['Float']['output'];
+};
+
+export type KeyValuePair = {
+  __typename?: 'KeyValuePair';
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 /** Link clicks by type breakdown */
@@ -899,6 +987,10 @@ export type Member = {
 
 export type Message = {
   __typename?: 'Message';
+  /** Shared card for CARD-type messages. Null if the card has since been deleted. */
+  card?: Maybe<Card>;
+  /** Card ID for CARD-type messages (null for TEXT) */
+  cardId?: Maybe<Scalars['String']['output']>;
   content: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   /** When the message was deleted */
@@ -913,8 +1005,15 @@ export type Message = {
   roomId: Scalars['String']['output'];
   sender?: Maybe<User>;
   senderId: Scalars['String']['output'];
+  /** Type of message — TEXT or CARD */
+  type: MessageType;
   updatedAt: Scalars['DateTime']['output'];
 };
+
+/** Type of message content */
+export type MessageType =
+  | 'CARD'
+  | 'TEXT';
 
 /** Monthly view data point for charts */
 export type MonthlyViewData = {
@@ -975,6 +1074,8 @@ export type Mutation = {
   googleAuth: AuthResponse;
   /** Mark all messages in a room as read */
   markRoomAsRead: Scalars['Boolean']['output'];
+  /** Prepare a content-addressable upload. Returns a signed PUT URL, or — if the object with this sha256 already exists — its public URL with no PUT needed. */
+  prepareUpload: PrepareUploadOutput;
   registerDevice: Device;
   /** Reject a hub application (admin only) */
   rejectHubApplication: HubApplication;
@@ -996,6 +1097,8 @@ export type Mutation = {
   trackEvent: Scalars['Boolean']['output'];
   /** Track multiple analytics events in batch */
   trackEvents: Scalars['Boolean']['output'];
+  /** Track a public hub interaction event (no auth required) */
+  trackPublicHubEvent: Scalars['Boolean']['output'];
   unregisterDevice: Scalars['Boolean']['output'];
   /** Update an existing card (owner only) */
   updateCard: Card;
@@ -1007,8 +1110,6 @@ export type Mutation = {
   updateNote: Note;
   /** Update the currently authenticated user profile */
   updateProfile: User;
-  /** Upload an image and get back the GCS URL */
-  uploadImage: UploadImageOutput;
   /** Verify code and login/register user */
   verifyCode: AuthResponse;
 };
@@ -1124,6 +1225,11 @@ export type MutationMarkRoomAsReadArgs = {
 };
 
 
+export type MutationPrepareUploadArgs = {
+  input: PrepareUploadInput;
+};
+
+
 export type MutationRegisterDeviceArgs = {
   input: RegisterDeviceInput;
 };
@@ -1180,6 +1286,12 @@ export type MutationTrackEventsArgs = {
 };
 
 
+export type MutationTrackPublicHubEventArgs = {
+  hubId: Scalars['String']['input'];
+  interactionType: Scalars['String']['input'];
+};
+
+
 export type MutationUnregisterDeviceArgs = {
   deviceId: Scalars['String']['input'];
 };
@@ -1207,11 +1319,6 @@ export type MutationUpdateNoteArgs = {
 
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
-};
-
-
-export type MutationUploadImageArgs = {
-  input: UploadImageInput;
 };
 
 
@@ -1266,7 +1373,7 @@ export type OnboardingStatus = {
   id: Scalars['ID']['output'];
   jobTitle?: Maybe<Scalars['String']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
-  onboardingCompleted: Scalars['Boolean']['output'];
+  onboardingCompletedAt?: Maybe<Scalars['DateTime']['output']>;
   picture?: Maybe<Scalars['String']['output']>;
 };
 
@@ -1285,15 +1392,26 @@ export type PaperSize =
   | 'A4'
   | 'LETTER';
 
+/** Peak time window */
+export type PeakWindow = {
+  __typename?: 'PeakWindow';
+  /** End hour (0-23) */
+  endHour: Scalars['Int']['output'];
+  /** 24-bucket hourly counts feeding the sparkline (index = hour) */
+  hourlyValues: Array<Scalars['Int']['output']>;
+  /** Start hour (0-23) */
+  startHour: Scalars['Int']['output'];
+};
+
 export type PersonalDetailsInput = {
   companyEmail: Scalars['String']['input'];
-  /** Existing profile photo URL (from OAuth) */
+  /** Existing profile photo URL (e.g. from OAuth provider) to keep as-is */
   existingProfilePhotoUrl?: InputMaybe<Scalars['String']['input']>;
   firstName: Scalars['String']['input'];
   jobTitle: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
-  /** Profile photo to upload (optional) */
-  profilePhotoUpload?: InputMaybe<ImageUploadInput>;
+  /** Final GCS URL of the profile photo (from prepareUpload) or null */
+  profilePhotoUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PlaceAutocompleteResult = {
@@ -1330,6 +1448,31 @@ export type Platform =
   | 'IOS'
   | 'WEB';
 
+export type PrepareUploadInput = {
+  /** Asset kind — drives validation */
+  kind: UploadKind;
+  /** MIME type of the file */
+  mimeType: Scalars['String']['input'];
+  /** Lowercase hex SHA-256 of the file bytes */
+  sha256: Scalars['String']['input'];
+  /** Exact byte size of the file */
+  sizeBytes: Scalars['Int']['input'];
+};
+
+export type PrepareUploadOutput = {
+  __typename?: 'PrepareUploadOutput';
+  /** True ⇒ object already in bucket; skip the PUT */
+  alreadyExists: Scalars['Boolean']['output'];
+  /** Final public URL — always present, even on dedup hit */
+  assetUrl: Scalars['String']['output'];
+  /** Signed URL expiry */
+  expiresAt: Scalars['DateTime']['output'];
+  /** Headers the client must echo on the PUT request */
+  requiredHeaders: Array<KeyValuePair>;
+  /** V4 signed PUT URL; null when alreadyExists is true */
+  uploadUrl?: Maybe<Scalars['String']['output']>;
+};
+
 /** Which side(s) of the card to print */
 export type PrintSide =
   | 'BACK'
@@ -1342,6 +1485,8 @@ export type Query = {
   adminMe: Admin;
   /** Get all card themes (including inactive) */
   allCardThemes: Array<CardTheme>;
+  /** Mobile app config: minimum supported binary version + store URLs */
+  appConfig: AppConfig;
   /** Get a card by ID (public for sharing) */
   card?: Maybe<Card>;
   /** Get image generation status for multiple cards (for polling) */
@@ -1358,12 +1503,36 @@ export type Query = {
   defaultCardTheme?: Maybe<CardTheme>;
   /** Get all available error codes for client-side error handling */
   errorCodes: Array<ErrorCode>;
-  /** Simple hello query */
-  hello: Scalars['String']['output'];
+  /** Liveness probe for production monitoring */
+  health: HealthStatus;
+  /** Get daily check-in counts */
+  hubDailyCheckIns: Array<DailyCheckIn>;
+  /** Get hourly check-in distribution for Peak & Quiet Hours */
+  hubHourlyDistribution: Array<HourlyDistribution>;
+  /** Get industry distribution of hub visitors */
+  hubIndustryDistribution: Array<IndustryDistribution>;
+  /** Get job title distribution of hub visitors */
+  hubJobTitleDistribution: Array<JobTitleDistribution>;
+  /** Get hub networking & engagement metrics */
+  hubNetworkingMetrics: HubNetworkingMetrics;
+  /** Get peak web traffic window */
+  hubPeakTrafficWindow: PeakWindow;
+  /** Get peak check-in window */
+  hubPeakWindow: PeakWindow;
+  /** Get top interactions breakdown */
+  hubTopInteractions: Array<HubInteractionBreakdown>;
+  /** Get hub traffic summary metrics */
+  hubTrafficSummary: HubTrafficSummary;
+  /** Get web visitor locations */
+  hubVisitorLocations: Array<LocationData>;
+  /** Get hub web analytics summary */
+  hubWebSummary: HubWebSummary;
+  /** Get web traffic trend (page views + interactions) */
+  hubWebTrafficTrend: Array<WebTrafficPoint>;
   /** Search for hubs near a location */
   hubs: Array<Hub>;
-  /** Get the timestamp of the last contact (message) with another user. Returns null if no chat exists. */
-  lastContactWithUser?: Maybe<Scalars['DateTime']['output']>;
+  /** Timestamp of the current user's most recent CARD_LINK_CLICKED event for the given card. Null if never followed up. */
+  lastFollowUpWithCard?: Maybe<Scalars['DateTime']['output']>;
   /** Get the currently authenticated user profile */
   me: User;
   /** Get the current user's active check-in */
@@ -1391,8 +1560,12 @@ export type Query = {
   /** Get all department memberships for the currently authenticated user */
   myDepartments: Array<DepartmentMember>;
   myDevices: Array<Device>;
+  /** Get the current user's hub (via org membership with HUB plan) */
+  myHub?: Maybe<Hub>;
   /** Get all hub applications for the current user */
   myHubApplications: Array<HubApplication>;
+  /** Get the current user's most recent check-in (active or expired). Used to prefill the new-check-in form. */
+  myLatestCheckIn?: Maybe<CheckIn>;
   /** Get all organization memberships for the currently authenticated user */
   myMemberships: Array<Member>;
   /** Get pending hub application for the current user */
@@ -1447,6 +1620,79 @@ export type QueryCheckedInUsersArgs = {
 };
 
 
+export type QueryHubDailyCheckInsArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubHourlyDistributionArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubIndustryDistributionArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubJobTitleDistributionArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubNetworkingMetricsArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubPeakTrafficWindowArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubPeakWindowArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubTopInteractionsArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+  source?: InputMaybe<AnalyticsSource>;
+};
+
+
+export type QueryHubTrafficSummaryArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubVisitorLocationsArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubWebSummaryArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
+export type QueryHubWebTrafficTrendArgs = {
+  hubId: Scalars['String']['input'];
+  period: AnalyticsPeriod;
+};
+
+
 export type QueryHubsArgs = {
   latitude: Scalars['Float']['input'];
   longitude: Scalars['Float']['input'];
@@ -1455,8 +1701,8 @@ export type QueryHubsArgs = {
 };
 
 
-export type QueryLastContactWithUserArgs = {
-  otherUserId: Scalars['String']['input'];
+export type QueryLastFollowUpWithCardArgs = {
+  cardId: Scalars['String']['input'];
 };
 
 
@@ -1571,6 +1817,7 @@ export type Role =
 
 /** The method used to save the card to wallet */
 export type SaveMethod =
+  | 'CHAT_SHARE'
   | 'NFC'
   | 'QR';
 
@@ -1662,10 +1909,14 @@ export type SendCodeInput = {
 };
 
 export type SendMessageInput = {
-  /** Message content */
-  content: Scalars['String']['input'];
+  /** Card ID being shared (required when type is CARD) */
+  cardId?: InputMaybe<Scalars['String']['input']>;
+  /** Message content (required for TEXT, ignored for CARD) */
+  content?: Scalars['String']['input'];
   /** Chat room ID to send the message to */
   roomId: Scalars['String']['input'];
+  /** Type of message — TEXT (default) or CARD */
+  type?: MessageType;
 };
 
 /** Input for tracking a single analytics event */
@@ -1697,6 +1948,7 @@ export type UpdateCardInput = {
   companyAddress?: InputMaybe<Scalars['String']['input']>;
   companyEmail?: InputMaybe<Scalars['String']['input']>;
   companyLogo?: InputMaybe<Scalars['String']['input']>;
+  companyLogoBack?: InputMaybe<Scalars['String']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
   companyPhone?: InputMaybe<Scalars['String']['input']>;
   companySize?: InputMaybe<Scalars['String']['input']>;
@@ -1769,6 +2021,8 @@ export type UpdateCheckInInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   /** ID of the card/profile to use for networking */
   cardId?: InputMaybe<Scalars['String']['input']>;
+  /** Mutual visibility radius in km. Other users farther than this from the check-in will not see it. */
+  discoveryRadiusKm?: InputMaybe<Scalars['Float']['input']>;
   /** Duration in minutes (e.g., 30, 60, 120, 240) */
   duration?: InputMaybe<Scalars['Int']['input']>;
   /** ID of the hub to check into (optional - can check-in at custom location instead) */
@@ -1787,20 +2041,20 @@ export type UpdateNoteInput = {
 export type UpdateProfileInput = {
   companyAddress?: InputMaybe<Scalars['String']['input']>;
   companyEmail?: InputMaybe<Scalars['String']['input']>;
-  /** Company logo to upload (optional) */
-  companyLogoUpload?: InputMaybe<ImageUploadInput>;
+  /** Final GCS URL of the company logo (from prepareUpload) or null to keep existing */
+  companyLogoUrl?: InputMaybe<Scalars['String']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
   companyPhone?: InputMaybe<Scalars['String']['input']>;
   companyWebsite?: InputMaybe<Scalars['String']['input']>;
   /** Existing company logo URL to keep */
   existingCompanyLogoUrl?: InputMaybe<Scalars['String']['input']>;
-  /** Existing profile photo URL to keep */
+  /** Existing profile photo URL to keep (e.g. from OAuth provider) */
   existingProfilePhotoUrl?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   jobTitle?: InputMaybe<Scalars['String']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
-  /** Profile photo to upload (optional) */
-  profilePhotoUpload?: InputMaybe<ImageUploadInput>;
+  /** Final GCS URL of the profile photo (from prepareUpload) or null to keep existing */
+  profilePhotoUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateThemeInput = {
@@ -1821,23 +2075,11 @@ export type UpdateThemeInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   /** Style schema defining customizable design options */
   styleSchema?: InputMaybe<Scalars['JSON']['input']>;
-  version?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UploadImageInput = {
-  /** Base64 encoded image data (without data URL prefix) */
-  base64: Scalars['String']['input'];
-  /** Original filename */
-  filename: Scalars['String']['input'];
-  /** MIME type (e.g., image/jpeg) */
-  mimeType: Scalars['String']['input'];
-};
-
-export type UploadImageOutput = {
-  __typename?: 'UploadImageOutput';
-  /** GCS URL of the uploaded image */
-  url: Scalars['String']['output'];
-};
+export type UploadKind =
+  | 'FILE'
+  | 'IMAGE';
 
 export type User = {
   __typename?: 'User';
@@ -1854,7 +2096,8 @@ export type User = {
   id: Scalars['ID']['output'];
   jobTitle?: Maybe<Scalars['String']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
-  onboardingCompleted: Scalars['Boolean']['output'];
+  memberships?: Maybe<Array<Member>>;
+  onboardingCompletedAt?: Maybe<Scalars['DateTime']['output']>;
   picture?: Maybe<Scalars['String']['output']>;
   providers: Array<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -1907,15 +2150,24 @@ export type WalletCardTag = {
   walletCardId: Scalars['String']['output'];
 };
 
+/** Web traffic data point with views & interactions */
+export type WebTrafficPoint = {
+  __typename?: 'WebTrafficPoint';
+  /** Date label */
+  date: Scalars['String']['output'];
+  interactions: Scalars['Int']['output'];
+  pageViews: Scalars['Int']['output'];
+};
+
 export type CardCoreFragment = { __typename?: 'Card', id: string, userId: string, firstName?: string | null, lastName?: string | null, jobTitle?: string | null, profilePhoto?: string | null };
 
 export type CardCompanyDetailsFragment = { __typename?: 'Card', companyName?: string | null, companyEmail?: string | null, companyPhone?: string | null, companyWebsite?: string | null, companyAddress?: string | null, companyLogo?: string | null, about?: string | null, industry?: string | null, specialties?: any | null, location?: string | null, companySize?: string | null };
 
-export type CardFullFragment = { __typename?: 'Card', templateId?: string | null, themeId?: string | null, name: string, isPrivate?: boolean | null, middleName?: string | null, prefix?: string | null, suffix?: string | null, preferredName?: string | null, pronouns?: string | null, maidenName?: string | null, bio?: string | null, department?: string | null, headline?: string | null, skills?: any | null, personalWebsite?: string | null, discord?: string | null, wechat?: string | null, line?: string | null, signal?: string | null, linkedin?: string | null, instagram?: string | null, x?: string | null, facebook?: string | null, tiktok?: string | null, youtube?: string | null, github?: string | null, dribbble?: string | null, behance?: string | null, snapchat?: string | null, pinterest?: string | null, whatsapp?: string | null, telegram?: string | null, threads?: string | null, patreon?: string | null, spotify?: string | null, soundcloud?: string | null, appleMusic?: string | null, teams?: string | null, meet?: string | null, zoom?: string | null, webex?: string | null, calendly?: string | null, bookings?: string | null, videoLink?: string | null, fileUpload?: any | null, displaySettings: any, customStyles: any, frontImageUrl?: string | null, backImageUrl?: string | null, createdAt: any, updatedAt: any, id: string, userId: string, firstName?: string | null, lastName?: string | null, jobTitle?: string | null, profilePhoto?: string | null, companyName?: string | null, companyEmail?: string | null, companyPhone?: string | null, companyWebsite?: string | null, companyAddress?: string | null, companyLogo?: string | null, about?: string | null, industry?: string | null, specialties?: any | null, location?: string | null, companySize?: string | null, theme?: { __typename?: 'CardTheme', author?: string | null, version: string, frontHtml: string, backHtml?: string | null, styleSchema: any, defaultDisplaySettings: any, isActive: boolean, frontPreviewUrl?: string | null, backPreviewUrl?: string | null, createdAt: any, updatedAt: any, id: string, name: string, displayName: string, description?: string | null, isDefault: boolean, isPremium: boolean } | null };
+export type CardFullFragment = { __typename?: 'Card', templateId?: string | null, themeId?: string | null, name: string, isPrivate?: boolean | null, middleName?: string | null, prefix?: string | null, suffix?: string | null, preferredName?: string | null, pronouns?: string | null, maidenName?: string | null, bio?: string | null, department?: string | null, headline?: string | null, skills?: any | null, personalWebsite?: string | null, discord?: string | null, wechat?: string | null, line?: string | null, signal?: string | null, linkedin?: string | null, instagram?: string | null, x?: string | null, facebook?: string | null, tiktok?: string | null, youtube?: string | null, github?: string | null, dribbble?: string | null, behance?: string | null, snapchat?: string | null, pinterest?: string | null, whatsapp?: string | null, telegram?: string | null, threads?: string | null, patreon?: string | null, spotify?: string | null, soundcloud?: string | null, appleMusic?: string | null, teams?: string | null, meet?: string | null, zoom?: string | null, webex?: string | null, calendly?: string | null, bookings?: string | null, videoLink?: string | null, fileUpload?: any | null, displaySettings: any, customStyles: any, frontImageUrl?: string | null, backImageUrl?: string | null, createdAt: any, updatedAt: any, id: string, userId: string, firstName?: string | null, lastName?: string | null, jobTitle?: string | null, profilePhoto?: string | null, companyName?: string | null, companyEmail?: string | null, companyPhone?: string | null, companyWebsite?: string | null, companyAddress?: string | null, companyLogo?: string | null, about?: string | null, industry?: string | null, specialties?: any | null, location?: string | null, companySize?: string | null, theme?: { __typename?: 'CardTheme', author?: string | null, frontHtml: string, backHtml?: string | null, styleSchema: any, defaultDisplaySettings: any, isActive: boolean, frontPreviewUrl?: string | null, backPreviewUrl?: string | null, createdAt: any, updatedAt: any, id: string, name: string, displayName: string, description?: string | null, isDefault: boolean, isPremium: boolean } | null };
 
 export type CardThemeCoreFragment = { __typename?: 'CardTheme', id: string, name: string, displayName: string, description?: string | null, isDefault: boolean, isPremium: boolean, frontPreviewUrl?: string | null };
 
-export type CardThemeFullFragment = { __typename?: 'CardTheme', author?: string | null, version: string, frontHtml: string, backHtml?: string | null, styleSchema: any, defaultDisplaySettings: any, isActive: boolean, frontPreviewUrl?: string | null, backPreviewUrl?: string | null, createdAt: any, updatedAt: any, id: string, name: string, displayName: string, description?: string | null, isDefault: boolean, isPremium: boolean };
+export type CardThemeFullFragment = { __typename?: 'CardTheme', author?: string | null, frontHtml: string, backHtml?: string | null, styleSchema: any, defaultDisplaySettings: any, isActive: boolean, frontPreviewUrl?: string | null, backPreviewUrl?: string | null, createdAt: any, updatedAt: any, id: string, name: string, displayName: string, description?: string | null, isDefault: boolean, isPremium: boolean };
 
 export type PublicCardQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -1923,11 +2175,11 @@ export type PublicCardQueryVariables = Exact<{
 }>;
 
 
-export type PublicCardQuery = { __typename?: 'Query', publicCard?: { __typename?: 'Card', templateId?: string | null, themeId?: string | null, name: string, isPrivate?: boolean | null, middleName?: string | null, prefix?: string | null, suffix?: string | null, preferredName?: string | null, pronouns?: string | null, maidenName?: string | null, bio?: string | null, department?: string | null, headline?: string | null, skills?: any | null, personalWebsite?: string | null, discord?: string | null, wechat?: string | null, line?: string | null, signal?: string | null, linkedin?: string | null, instagram?: string | null, x?: string | null, facebook?: string | null, tiktok?: string | null, youtube?: string | null, github?: string | null, dribbble?: string | null, behance?: string | null, snapchat?: string | null, pinterest?: string | null, whatsapp?: string | null, telegram?: string | null, threads?: string | null, patreon?: string | null, spotify?: string | null, soundcloud?: string | null, appleMusic?: string | null, teams?: string | null, meet?: string | null, zoom?: string | null, webex?: string | null, calendly?: string | null, bookings?: string | null, videoLink?: string | null, fileUpload?: any | null, displaySettings: any, customStyles: any, frontImageUrl?: string | null, backImageUrl?: string | null, createdAt: any, updatedAt: any, id: string, userId: string, firstName?: string | null, lastName?: string | null, jobTitle?: string | null, profilePhoto?: string | null, companyName?: string | null, companyEmail?: string | null, companyPhone?: string | null, companyWebsite?: string | null, companyAddress?: string | null, companyLogo?: string | null, about?: string | null, industry?: string | null, specialties?: any | null, location?: string | null, companySize?: string | null, theme?: { __typename?: 'CardTheme', author?: string | null, version: string, frontHtml: string, backHtml?: string | null, styleSchema: any, defaultDisplaySettings: any, isActive: boolean, frontPreviewUrl?: string | null, backPreviewUrl?: string | null, createdAt: any, updatedAt: any, id: string, name: string, displayName: string, description?: string | null, isDefault: boolean, isPremium: boolean } | null } | null };
+export type PublicCardQuery = { __typename?: 'Query', publicCard?: { __typename?: 'Card', templateId?: string | null, themeId?: string | null, name: string, isPrivate?: boolean | null, middleName?: string | null, prefix?: string | null, suffix?: string | null, preferredName?: string | null, pronouns?: string | null, maidenName?: string | null, bio?: string | null, department?: string | null, headline?: string | null, skills?: any | null, personalWebsite?: string | null, discord?: string | null, wechat?: string | null, line?: string | null, signal?: string | null, linkedin?: string | null, instagram?: string | null, x?: string | null, facebook?: string | null, tiktok?: string | null, youtube?: string | null, github?: string | null, dribbble?: string | null, behance?: string | null, snapchat?: string | null, pinterest?: string | null, whatsapp?: string | null, telegram?: string | null, threads?: string | null, patreon?: string | null, spotify?: string | null, soundcloud?: string | null, appleMusic?: string | null, teams?: string | null, meet?: string | null, zoom?: string | null, webex?: string | null, calendly?: string | null, bookings?: string | null, videoLink?: string | null, fileUpload?: any | null, displaySettings: any, customStyles: any, frontImageUrl?: string | null, backImageUrl?: string | null, createdAt: any, updatedAt: any, id: string, userId: string, firstName?: string | null, lastName?: string | null, jobTitle?: string | null, profilePhoto?: string | null, companyName?: string | null, companyEmail?: string | null, companyPhone?: string | null, companyWebsite?: string | null, companyAddress?: string | null, companyLogo?: string | null, about?: string | null, industry?: string | null, specialties?: any | null, location?: string | null, companySize?: string | null, theme?: { __typename?: 'CardTheme', author?: string | null, frontHtml: string, backHtml?: string | null, styleSchema: any, defaultDisplaySettings: any, isActive: boolean, frontPreviewUrl?: string | null, backPreviewUrl?: string | null, createdAt: any, updatedAt: any, id: string, name: string, displayName: string, description?: string | null, isDefault: boolean, isPremium: boolean } | null } | null };
 
 export const CardCoreFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"jobTitle"}},{"kind":"Field","name":{"kind":"Name","value":"profilePhoto"}}]}}]} as unknown as DocumentNode<CardCoreFragment, unknown>;
 export const CardCompanyDetailsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCompanyDetails"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyName"}},{"kind":"Field","name":{"kind":"Name","value":"companyEmail"}},{"kind":"Field","name":{"kind":"Name","value":"companyPhone"}},{"kind":"Field","name":{"kind":"Name","value":"companyWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"companyAddress"}},{"kind":"Field","name":{"kind":"Name","value":"companyLogo"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"industry"}},{"kind":"Field","name":{"kind":"Name","value":"specialties"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"companySize"}}]}}]} as unknown as DocumentNode<CardCompanyDetailsFragment, unknown>;
 export const CardThemeCoreFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isDefault"}},{"kind":"Field","name":{"kind":"Name","value":"isPremium"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}}]}}]} as unknown as DocumentNode<CardThemeCoreFragment, unknown>;
-export const CardThemeFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeCore"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"frontHtml"}},{"kind":"Field","name":{"kind":"Name","value":"backHtml"}},{"kind":"Field","name":{"kind":"Name","value":"styleSchema"}},{"kind":"Field","name":{"kind":"Name","value":"defaultDisplaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isDefault"}},{"kind":"Field","name":{"kind":"Name","value":"isPremium"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}}]}}]} as unknown as DocumentNode<CardThemeFullFragment, unknown>;
-export const CardFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardCore"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardCompanyDetails"}},{"kind":"Field","name":{"kind":"Name","value":"templateId"}},{"kind":"Field","name":{"kind":"Name","value":"themeId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isPrivate"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"prefix"}},{"kind":"Field","name":{"kind":"Name","value":"suffix"}},{"kind":"Field","name":{"kind":"Name","value":"preferredName"}},{"kind":"Field","name":{"kind":"Name","value":"pronouns"}},{"kind":"Field","name":{"kind":"Name","value":"maidenName"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"department"}},{"kind":"Field","name":{"kind":"Name","value":"headline"}},{"kind":"Field","name":{"kind":"Name","value":"skills"}},{"kind":"Field","name":{"kind":"Name","value":"personalWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"discord"}},{"kind":"Field","name":{"kind":"Name","value":"wechat"}},{"kind":"Field","name":{"kind":"Name","value":"line"}},{"kind":"Field","name":{"kind":"Name","value":"signal"}},{"kind":"Field","name":{"kind":"Name","value":"linkedin"}},{"kind":"Field","name":{"kind":"Name","value":"instagram"}},{"kind":"Field","name":{"kind":"Name","value":"x"}},{"kind":"Field","name":{"kind":"Name","value":"facebook"}},{"kind":"Field","name":{"kind":"Name","value":"tiktok"}},{"kind":"Field","name":{"kind":"Name","value":"youtube"}},{"kind":"Field","name":{"kind":"Name","value":"github"}},{"kind":"Field","name":{"kind":"Name","value":"dribbble"}},{"kind":"Field","name":{"kind":"Name","value":"behance"}},{"kind":"Field","name":{"kind":"Name","value":"snapchat"}},{"kind":"Field","name":{"kind":"Name","value":"pinterest"}},{"kind":"Field","name":{"kind":"Name","value":"whatsapp"}},{"kind":"Field","name":{"kind":"Name","value":"telegram"}},{"kind":"Field","name":{"kind":"Name","value":"threads"}},{"kind":"Field","name":{"kind":"Name","value":"patreon"}},{"kind":"Field","name":{"kind":"Name","value":"spotify"}},{"kind":"Field","name":{"kind":"Name","value":"soundcloud"}},{"kind":"Field","name":{"kind":"Name","value":"appleMusic"}},{"kind":"Field","name":{"kind":"Name","value":"teams"}},{"kind":"Field","name":{"kind":"Name","value":"meet"}},{"kind":"Field","name":{"kind":"Name","value":"zoom"}},{"kind":"Field","name":{"kind":"Name","value":"webex"}},{"kind":"Field","name":{"kind":"Name","value":"calendly"}},{"kind":"Field","name":{"kind":"Name","value":"bookings"}},{"kind":"Field","name":{"kind":"Name","value":"videoLink"}},{"kind":"Field","name":{"kind":"Name","value":"fileUpload"}},{"kind":"Field","name":{"kind":"Name","value":"displaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"customStyles"}},{"kind":"Field","name":{"kind":"Name","value":"frontImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"theme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeFull"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isDefault"}},{"kind":"Field","name":{"kind":"Name","value":"isPremium"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"jobTitle"}},{"kind":"Field","name":{"kind":"Name","value":"profilePhoto"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCompanyDetails"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyName"}},{"kind":"Field","name":{"kind":"Name","value":"companyEmail"}},{"kind":"Field","name":{"kind":"Name","value":"companyPhone"}},{"kind":"Field","name":{"kind":"Name","value":"companyWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"companyAddress"}},{"kind":"Field","name":{"kind":"Name","value":"companyLogo"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"industry"}},{"kind":"Field","name":{"kind":"Name","value":"specialties"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"companySize"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeCore"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"frontHtml"}},{"kind":"Field","name":{"kind":"Name","value":"backHtml"}},{"kind":"Field","name":{"kind":"Name","value":"styleSchema"}},{"kind":"Field","name":{"kind":"Name","value":"defaultDisplaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<CardFullFragment, unknown>;
-export const PublicCardDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PublicCard"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"source"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publicCard"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"source"},"value":{"kind":"Variable","name":{"kind":"Name","value":"source"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardFull"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"jobTitle"}},{"kind":"Field","name":{"kind":"Name","value":"profilePhoto"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCompanyDetails"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyName"}},{"kind":"Field","name":{"kind":"Name","value":"companyEmail"}},{"kind":"Field","name":{"kind":"Name","value":"companyPhone"}},{"kind":"Field","name":{"kind":"Name","value":"companyWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"companyAddress"}},{"kind":"Field","name":{"kind":"Name","value":"companyLogo"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"industry"}},{"kind":"Field","name":{"kind":"Name","value":"specialties"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"companySize"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isDefault"}},{"kind":"Field","name":{"kind":"Name","value":"isPremium"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeCore"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"frontHtml"}},{"kind":"Field","name":{"kind":"Name","value":"backHtml"}},{"kind":"Field","name":{"kind":"Name","value":"styleSchema"}},{"kind":"Field","name":{"kind":"Name","value":"defaultDisplaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardCore"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardCompanyDetails"}},{"kind":"Field","name":{"kind":"Name","value":"templateId"}},{"kind":"Field","name":{"kind":"Name","value":"themeId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isPrivate"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"prefix"}},{"kind":"Field","name":{"kind":"Name","value":"suffix"}},{"kind":"Field","name":{"kind":"Name","value":"preferredName"}},{"kind":"Field","name":{"kind":"Name","value":"pronouns"}},{"kind":"Field","name":{"kind":"Name","value":"maidenName"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"department"}},{"kind":"Field","name":{"kind":"Name","value":"headline"}},{"kind":"Field","name":{"kind":"Name","value":"skills"}},{"kind":"Field","name":{"kind":"Name","value":"personalWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"discord"}},{"kind":"Field","name":{"kind":"Name","value":"wechat"}},{"kind":"Field","name":{"kind":"Name","value":"line"}},{"kind":"Field","name":{"kind":"Name","value":"signal"}},{"kind":"Field","name":{"kind":"Name","value":"linkedin"}},{"kind":"Field","name":{"kind":"Name","value":"instagram"}},{"kind":"Field","name":{"kind":"Name","value":"x"}},{"kind":"Field","name":{"kind":"Name","value":"facebook"}},{"kind":"Field","name":{"kind":"Name","value":"tiktok"}},{"kind":"Field","name":{"kind":"Name","value":"youtube"}},{"kind":"Field","name":{"kind":"Name","value":"github"}},{"kind":"Field","name":{"kind":"Name","value":"dribbble"}},{"kind":"Field","name":{"kind":"Name","value":"behance"}},{"kind":"Field","name":{"kind":"Name","value":"snapchat"}},{"kind":"Field","name":{"kind":"Name","value":"pinterest"}},{"kind":"Field","name":{"kind":"Name","value":"whatsapp"}},{"kind":"Field","name":{"kind":"Name","value":"telegram"}},{"kind":"Field","name":{"kind":"Name","value":"threads"}},{"kind":"Field","name":{"kind":"Name","value":"patreon"}},{"kind":"Field","name":{"kind":"Name","value":"spotify"}},{"kind":"Field","name":{"kind":"Name","value":"soundcloud"}},{"kind":"Field","name":{"kind":"Name","value":"appleMusic"}},{"kind":"Field","name":{"kind":"Name","value":"teams"}},{"kind":"Field","name":{"kind":"Name","value":"meet"}},{"kind":"Field","name":{"kind":"Name","value":"zoom"}},{"kind":"Field","name":{"kind":"Name","value":"webex"}},{"kind":"Field","name":{"kind":"Name","value":"calendly"}},{"kind":"Field","name":{"kind":"Name","value":"bookings"}},{"kind":"Field","name":{"kind":"Name","value":"videoLink"}},{"kind":"Field","name":{"kind":"Name","value":"fileUpload"}},{"kind":"Field","name":{"kind":"Name","value":"displaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"customStyles"}},{"kind":"Field","name":{"kind":"Name","value":"frontImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"theme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeFull"}}]}}]}}]} as unknown as DocumentNode<PublicCardQuery, PublicCardQueryVariables>;
+export const CardThemeFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeCore"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"frontHtml"}},{"kind":"Field","name":{"kind":"Name","value":"backHtml"}},{"kind":"Field","name":{"kind":"Name","value":"styleSchema"}},{"kind":"Field","name":{"kind":"Name","value":"defaultDisplaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isDefault"}},{"kind":"Field","name":{"kind":"Name","value":"isPremium"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}}]}}]} as unknown as DocumentNode<CardThemeFullFragment, unknown>;
+export const CardFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardCore"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardCompanyDetails"}},{"kind":"Field","name":{"kind":"Name","value":"templateId"}},{"kind":"Field","name":{"kind":"Name","value":"themeId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isPrivate"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"prefix"}},{"kind":"Field","name":{"kind":"Name","value":"suffix"}},{"kind":"Field","name":{"kind":"Name","value":"preferredName"}},{"kind":"Field","name":{"kind":"Name","value":"pronouns"}},{"kind":"Field","name":{"kind":"Name","value":"maidenName"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"department"}},{"kind":"Field","name":{"kind":"Name","value":"headline"}},{"kind":"Field","name":{"kind":"Name","value":"skills"}},{"kind":"Field","name":{"kind":"Name","value":"personalWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"discord"}},{"kind":"Field","name":{"kind":"Name","value":"wechat"}},{"kind":"Field","name":{"kind":"Name","value":"line"}},{"kind":"Field","name":{"kind":"Name","value":"signal"}},{"kind":"Field","name":{"kind":"Name","value":"linkedin"}},{"kind":"Field","name":{"kind":"Name","value":"instagram"}},{"kind":"Field","name":{"kind":"Name","value":"x"}},{"kind":"Field","name":{"kind":"Name","value":"facebook"}},{"kind":"Field","name":{"kind":"Name","value":"tiktok"}},{"kind":"Field","name":{"kind":"Name","value":"youtube"}},{"kind":"Field","name":{"kind":"Name","value":"github"}},{"kind":"Field","name":{"kind":"Name","value":"dribbble"}},{"kind":"Field","name":{"kind":"Name","value":"behance"}},{"kind":"Field","name":{"kind":"Name","value":"snapchat"}},{"kind":"Field","name":{"kind":"Name","value":"pinterest"}},{"kind":"Field","name":{"kind":"Name","value":"whatsapp"}},{"kind":"Field","name":{"kind":"Name","value":"telegram"}},{"kind":"Field","name":{"kind":"Name","value":"threads"}},{"kind":"Field","name":{"kind":"Name","value":"patreon"}},{"kind":"Field","name":{"kind":"Name","value":"spotify"}},{"kind":"Field","name":{"kind":"Name","value":"soundcloud"}},{"kind":"Field","name":{"kind":"Name","value":"appleMusic"}},{"kind":"Field","name":{"kind":"Name","value":"teams"}},{"kind":"Field","name":{"kind":"Name","value":"meet"}},{"kind":"Field","name":{"kind":"Name","value":"zoom"}},{"kind":"Field","name":{"kind":"Name","value":"webex"}},{"kind":"Field","name":{"kind":"Name","value":"calendly"}},{"kind":"Field","name":{"kind":"Name","value":"bookings"}},{"kind":"Field","name":{"kind":"Name","value":"videoLink"}},{"kind":"Field","name":{"kind":"Name","value":"fileUpload"}},{"kind":"Field","name":{"kind":"Name","value":"displaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"customStyles"}},{"kind":"Field","name":{"kind":"Name","value":"frontImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"theme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeFull"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isDefault"}},{"kind":"Field","name":{"kind":"Name","value":"isPremium"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"jobTitle"}},{"kind":"Field","name":{"kind":"Name","value":"profilePhoto"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCompanyDetails"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyName"}},{"kind":"Field","name":{"kind":"Name","value":"companyEmail"}},{"kind":"Field","name":{"kind":"Name","value":"companyPhone"}},{"kind":"Field","name":{"kind":"Name","value":"companyWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"companyAddress"}},{"kind":"Field","name":{"kind":"Name","value":"companyLogo"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"industry"}},{"kind":"Field","name":{"kind":"Name","value":"specialties"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"companySize"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeCore"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"frontHtml"}},{"kind":"Field","name":{"kind":"Name","value":"backHtml"}},{"kind":"Field","name":{"kind":"Name","value":"styleSchema"}},{"kind":"Field","name":{"kind":"Name","value":"defaultDisplaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<CardFullFragment, unknown>;
+export const PublicCardDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PublicCard"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"source"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publicCard"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"source"},"value":{"kind":"Variable","name":{"kind":"Name","value":"source"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardFull"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"jobTitle"}},{"kind":"Field","name":{"kind":"Name","value":"profilePhoto"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardCompanyDetails"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyName"}},{"kind":"Field","name":{"kind":"Name","value":"companyEmail"}},{"kind":"Field","name":{"kind":"Name","value":"companyPhone"}},{"kind":"Field","name":{"kind":"Name","value":"companyWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"companyAddress"}},{"kind":"Field","name":{"kind":"Name","value":"companyLogo"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"industry"}},{"kind":"Field","name":{"kind":"Name","value":"specialties"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"companySize"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeCore"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isDefault"}},{"kind":"Field","name":{"kind":"Name","value":"isPremium"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardThemeFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CardTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeCore"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"frontHtml"}},{"kind":"Field","name":{"kind":"Name","value":"backHtml"}},{"kind":"Field","name":{"kind":"Name","value":"styleSchema"}},{"kind":"Field","name":{"kind":"Name","value":"defaultDisplaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"frontPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backPreviewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CardFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Card"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardCore"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardCompanyDetails"}},{"kind":"Field","name":{"kind":"Name","value":"templateId"}},{"kind":"Field","name":{"kind":"Name","value":"themeId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isPrivate"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"prefix"}},{"kind":"Field","name":{"kind":"Name","value":"suffix"}},{"kind":"Field","name":{"kind":"Name","value":"preferredName"}},{"kind":"Field","name":{"kind":"Name","value":"pronouns"}},{"kind":"Field","name":{"kind":"Name","value":"maidenName"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"department"}},{"kind":"Field","name":{"kind":"Name","value":"headline"}},{"kind":"Field","name":{"kind":"Name","value":"skills"}},{"kind":"Field","name":{"kind":"Name","value":"personalWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"discord"}},{"kind":"Field","name":{"kind":"Name","value":"wechat"}},{"kind":"Field","name":{"kind":"Name","value":"line"}},{"kind":"Field","name":{"kind":"Name","value":"signal"}},{"kind":"Field","name":{"kind":"Name","value":"linkedin"}},{"kind":"Field","name":{"kind":"Name","value":"instagram"}},{"kind":"Field","name":{"kind":"Name","value":"x"}},{"kind":"Field","name":{"kind":"Name","value":"facebook"}},{"kind":"Field","name":{"kind":"Name","value":"tiktok"}},{"kind":"Field","name":{"kind":"Name","value":"youtube"}},{"kind":"Field","name":{"kind":"Name","value":"github"}},{"kind":"Field","name":{"kind":"Name","value":"dribbble"}},{"kind":"Field","name":{"kind":"Name","value":"behance"}},{"kind":"Field","name":{"kind":"Name","value":"snapchat"}},{"kind":"Field","name":{"kind":"Name","value":"pinterest"}},{"kind":"Field","name":{"kind":"Name","value":"whatsapp"}},{"kind":"Field","name":{"kind":"Name","value":"telegram"}},{"kind":"Field","name":{"kind":"Name","value":"threads"}},{"kind":"Field","name":{"kind":"Name","value":"patreon"}},{"kind":"Field","name":{"kind":"Name","value":"spotify"}},{"kind":"Field","name":{"kind":"Name","value":"soundcloud"}},{"kind":"Field","name":{"kind":"Name","value":"appleMusic"}},{"kind":"Field","name":{"kind":"Name","value":"teams"}},{"kind":"Field","name":{"kind":"Name","value":"meet"}},{"kind":"Field","name":{"kind":"Name","value":"zoom"}},{"kind":"Field","name":{"kind":"Name","value":"webex"}},{"kind":"Field","name":{"kind":"Name","value":"calendly"}},{"kind":"Field","name":{"kind":"Name","value":"bookings"}},{"kind":"Field","name":{"kind":"Name","value":"videoLink"}},{"kind":"Field","name":{"kind":"Name","value":"fileUpload"}},{"kind":"Field","name":{"kind":"Name","value":"displaySettings"}},{"kind":"Field","name":{"kind":"Name","value":"customStyles"}},{"kind":"Field","name":{"kind":"Name","value":"frontImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"backImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"theme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CardThemeFull"}}]}}]}}]} as unknown as DocumentNode<PublicCardQuery, PublicCardQueryVariables>;

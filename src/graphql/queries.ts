@@ -70,7 +70,6 @@ export const PUBLIC_CARD_QUERY = `
         isPremium
         frontPreviewUrl
         author
-        version
         frontHtml
         backHtml
         styleSchema
