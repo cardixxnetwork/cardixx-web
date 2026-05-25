@@ -5,13 +5,16 @@ import { PUBLIC_CARD_QUERY } from "@/graphql/queries";
 import type { CardFullFragment } from "@/graphql/generated/graphql";
 import { renderTemplate } from "@/lib/template-engine";
 import { computeBackgroundCss, prepareTemplateData } from "@/lib/template-data";
-import { prepareEmbedHtml, ORIGINAL_CARD_WIDTH } from "@/lib/card-fonts";
+import { prepareEmbedHtml } from "@/lib/card-fonts";
 import { FlipCard } from "@/components/embed/flip-card";
+import {
+  CARD_BORDER_RADIUS,
+  ORIGINAL_CARD_HEIGHT,
+  ORIGINAL_CARD_WIDTH,
+} from "@cardixx/card-schema";
 
 export const revalidate = 60;
 
-// Card design dimensions — iframe always renders at this native size
-const ORIGINAL_CARD_HEIGHT = 195;
 const MAX_SCALE = 2;
 
 interface EmbedPageProps {
@@ -135,7 +138,7 @@ export default async function EmbedPage({
           style={{
             width: ORIGINAL_CARD_WIDTH * scale,
             height: ORIGINAL_CARD_HEIGHT * scale,
-            borderRadius: 12,
+            borderRadius: CARD_BORDER_RADIUS * scale,
             overflow: "hidden",
             boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
           }}

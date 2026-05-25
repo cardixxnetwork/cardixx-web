@@ -571,7 +571,7 @@ export type CreateHubApplicationInput = {
   phoneNumber: Scalars['String']['input'];
   shortDescription?: InputMaybe<Scalars['String']['input']>;
   venueName: Scalars['String']['input'];
-  /** Venue signage photo URL (uploaded to GCS) */
+  /** Venue signage photo URL (uploaded to GCS via prepareUpload) */
   venueSignagePhoto: Scalars['String']['input'];
   venueType?: InputMaybe<Scalars['String']['input']>;
   zipCode?: InputMaybe<Scalars['String']['input']>;
@@ -701,8 +701,11 @@ export type Device = {
 
 /** Application error codes for type-safe error handling */
 export type ErrorCode =
+  | 'ACCOUNT_NOT_PENDING_DELETION'
+  | 'ACCOUNT_PENDING_DELETION'
   | 'ACTIVE_CHECKIN_EXISTS'
   | 'AUTHENTICATION_REQUIRED'
+  | 'CANNOT_REPORT_SELF'
   | 'CARD_ALREADY_IN_WALLET'
   | 'CARD_LOCKED'
   | 'CARD_NOT_FOUND'
@@ -1040,6 +1043,8 @@ export type Mutation = {
   approveHubApplication: HubApplication;
   /** Archive a chat room */
   archiveChat: ChatRoom;
+  /** Cancel a previously requested account deletion. Allowed while the account is frozen. */
+  cancelAccountDeletion: User;
   /** Complete user onboarding by updating profile and creating first card */
   completeOnboarding: OnboardingResult;
   /** Create a new card for the currently authenticated user */
@@ -1083,6 +1088,10 @@ export type Mutation = {
   removeFromWallet: Scalars['Boolean']['output'];
   /** Remove a tag from a wallet card */
   removeTagFromWalletCard: Scalars['Boolean']['output'];
+  /** Report and block another user. Hides both users from each other on Networking and archives any open chat. */
+  reportUser: Report;
+  /** Schedule the authenticated account for deletion. The account is frozen and will be hard-deleted after 365 days unless cancelled. */
+  requestAccountDeletion: User;
   /** Save a card to the current user wallet */
   saveToWallet: WalletCard;
   /** Scan a business card image and extract contact information using AI */
@@ -1248,6 +1257,11 @@ export type MutationRemoveFromWalletArgs = {
 
 export type MutationRemoveTagFromWalletCardArgs = {
   tagId: Scalars['String']['input'];
+};
+
+
+export type MutationReportUserArgs = {
+  input: ReportUserInput;
 };
 
 
@@ -1809,6 +1823,22 @@ export type RegisterDeviceInput = {
   platform: Platform;
 };
 
+export type Report = {
+  __typename?: 'Report';
+  chatRoomId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  reportedUserId: Scalars['String']['output'];
+  reporterUserId: Scalars['String']['output'];
+};
+
+export type ReportUserInput = {
+  /** Chat room the report was filed from (used as evidence). */
+  chatRoomId?: InputMaybe<Scalars['String']['input']>;
+  /** The user being reported & blocked. */
+  reportedUserId: Scalars['String']['input'];
+};
+
 /** User role in an organization */
 export type Role =
   | 'ADMIN'
@@ -2046,8 +2076,6 @@ export type UpdateProfileInput = {
   companyName?: InputMaybe<Scalars['String']['input']>;
   companyPhone?: InputMaybe<Scalars['String']['input']>;
   companyWebsite?: InputMaybe<Scalars['String']['input']>;
-  /** Existing company logo URL to keep */
-  existingCompanyLogoUrl?: InputMaybe<Scalars['String']['input']>;
   /** Existing profile photo URL to keep (e.g. from OAuth provider) */
   existingProfilePhotoUrl?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
@@ -2090,6 +2118,7 @@ export type User = {
   companyPhone?: Maybe<Scalars['String']['output']>;
   companyWebsite?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
   emailVerified: Scalars['Boolean']['output'];
   firstName?: Maybe<Scalars['String']['output']>;

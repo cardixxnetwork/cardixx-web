@@ -17,7 +17,7 @@ const CARD_FONTS = [
   "Open Sans",
 ];
 
-const ORIGINAL_CARD_WIDTH = 342;
+import { ORIGINAL_CARD_WIDTH } from "@cardixx/card-schema";
 
 /**
  * Promote each declaration in a `background: ...; ...` CSS string to
@@ -80,4 +80,7 @@ export function prepareEmbedHtml(
   return result;
 }
 
-export { ORIGINAL_CARD_WIDTH, CARD_FONTS };
+// Re-export ORIGINAL_CARD_WIDTH so embed/* call sites don't need to know
+// about @cardixx/card-schema directly. card-schema remains the single source.
+export { ORIGINAL_CARD_WIDTH };
+export { CARD_FONTS };

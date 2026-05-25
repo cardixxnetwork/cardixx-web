@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useRef } from "react";
-
-const ORIGINAL_CARD_WIDTH = 342;
-const ORIGINAL_CARD_HEIGHT = 195;
+import {
+  CARD_BORDER_COLOR,
+  CARD_BORDER_RADIUS,
+  ORIGINAL_CARD_HEIGHT,
+  ORIGINAL_CARD_WIDTH,
+} from "@cardixx/card-schema";
 
 interface InteractiveCardProps {
   frontHtml: string;
@@ -12,7 +15,7 @@ interface InteractiveCardProps {
 }
 
 const thickness = 2;
-const edgeColor = "#cbd5e1";
+const edgeColor = CARD_BORDER_COLOR;
 const mouseSensitivity = 10;
 const lighting = { glow: 15, shadow: 45 };
 
@@ -106,11 +109,12 @@ export function InteractiveCard({
         >
           {/* Ground shadow — inside flip container so it rotates with the card */}
           <div
-            className="pointer-events-none absolute inset-0 rounded-3xl"
+            className="pointer-events-none absolute inset-0"
             style={{
               backgroundColor: "#000000",
               opacity: 0.15,
               filter: "blur(30px)",
+              borderRadius: CARD_BORDER_RADIUS * scale,
               transform: `translateZ(${-thickness - 40}px) translateY(25px) scale(0.95)`,
             }}
           />
@@ -119,15 +123,23 @@ export function InteractiveCard({
           {Array.from({ length: thickness * 2 - 1 }).map((_, i) => (
             <div
               key={i}
-              className="absolute inset-0 rounded-3xl"
-              style={{ backgroundColor: edgeColor, transform: `translateZ(${-thickness + i + 1}px)` }}
+              className="absolute inset-0"
+              style={{
+                backgroundColor: edgeColor,
+                borderRadius: CARD_BORDER_RADIUS * scale,
+                transform: `translateZ(${-thickness + i + 1}px)`,
+              }}
             />
           ))}
 
           {/* FRONT FACE */}
           <div
-            className="absolute inset-0 rounded-3xl bg-white overflow-hidden"
-            style={{ backfaceVisibility: "hidden", transform: `translateZ(${thickness}px)` }}
+            className="absolute inset-0 bg-white overflow-hidden"
+            style={{
+              backfaceVisibility: "hidden",
+              borderRadius: CARD_BORDER_RADIUS * scale,
+              transform: `translateZ(${thickness}px)`,
+            }}
           >
             <iframe
               srcDoc={frontHtml}
@@ -153,8 +165,12 @@ export function InteractiveCard({
 
           {/* BACK FACE */}
           <div
-            className="absolute inset-0 rounded-3xl bg-slate-900 overflow-hidden"
-            style={{ backfaceVisibility: "hidden", transform: `rotateY(180deg) translateZ(${thickness}px)` }}
+            className="absolute inset-0 bg-slate-900 overflow-hidden"
+            style={{
+              backfaceVisibility: "hidden",
+              borderRadius: CARD_BORDER_RADIUS * scale,
+              transform: `rotateY(180deg) translateZ(${thickness}px)`,
+            }}
           >
             {hasBack ? (
               <iframe

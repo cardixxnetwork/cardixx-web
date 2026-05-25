@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { ORIGINAL_CARD_WIDTH } from "@cardixx/card-schema";
 import { InteractiveCard } from "./interactive-card";
 
-const ORIGINAL_CARD_WIDTH = 342;
 const MAX_SCALE = 513 / ORIGINAL_CARD_WIDTH; // ~1.5x
 
 interface CardHeroProps {

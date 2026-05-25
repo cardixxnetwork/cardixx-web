@@ -2,10 +2,11 @@
 
 import { useState, useRef, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-
-// Card design dimensions — iframe always renders at native size
-const ORIGINAL_CARD_WIDTH = 342;
-const ORIGINAL_CARD_HEIGHT = 195;
+import {
+  CARD_BORDER_RADIUS,
+  ORIGINAL_CARD_HEIGHT,
+  ORIGINAL_CARD_WIDTH,
+} from "@cardixx/card-schema";
 
 interface FlipCardProps {
   frontHtml: string;
@@ -89,7 +90,7 @@ export function FlipCard({ frontHtml, backHtml, width, height }: FlipCardProps) 
             inset: 0,
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
-            borderRadius: 12,
+            borderRadius: CARD_BORDER_RADIUS * scale,
             overflow: "hidden",
             boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
           }}
@@ -117,7 +118,7 @@ export function FlipCard({ frontHtml, backHtml, width, height }: FlipCardProps) 
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            borderRadius: 12,
+            borderRadius: CARD_BORDER_RADIUS * scale,
             overflow: "hidden",
             boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
           }}
