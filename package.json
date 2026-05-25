@@ -12,7 +12,7 @@
     "codegen": "graphql-codegen"
   },
   "dependencies": {
-    "@cardixx/card-schema": "npm:@cardixxnetwork/card-schema@1.5.1",
+    "@cardixx/card-schema": "npm:@cardixxnetwork/card-schema@1.5.2",
     "@payloadcms/db-postgres": "^3.81.0",
     "@payloadcms/next": "^3.81.0",
     "@payloadcms/richtext-lexical": "^3.81.0",
